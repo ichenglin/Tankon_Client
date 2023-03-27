@@ -27,7 +27,7 @@ const Home: NextPageLayout = () => {
 		const canvas_context = canvas_element.getContext("2d") as CanvasRenderingContext2D;
 		canvas_context.clearRect(0, 0, canvas_element.width, canvas_element.height);
 		// fps
-		canvas_context.font  = "20px Sono";
+		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}`, 10, 25);
 		// content
 		canvas_context.fillRect(100, 100, 100, 100);
@@ -49,7 +49,7 @@ const Home: NextPageLayout = () => {
 
 	return (
 		<section className={styles.body}>
-			<canvas id="canvas" className={`${styles.canvas}`}/>
+			<canvas id="canvas" className={styles.canvas}/>
 		</section>
 	);
 };
