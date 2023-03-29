@@ -36,13 +36,13 @@ const Home: NextPageLayout = () => {
 		canvas_context.clearRect(0, 0, canvas_element.width, canvas_element.height);
 		// fps
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
-		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${player_manager.chassis_get_coordinates().get_x()}, ${player_manager.chassis_get_coordinates().get_y()})`, 10, 25);
+		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${player_manager.chassis_get_coordinates().point_get_x()}, ${player_manager.chassis_get_coordinates().point_get_y()})`, 10, 25);
 		// player character
 		const tank_image_chassis = new Image();
 		const tank_image_turret = new Image();
 		tank_image_chassis.src = "/tanks/chassis.png";
 		tank_image_turret.src = "/tanks/turret.png";
-		drawimage_rotation(canvas_context, tank_image_chassis, (window.innerWidth / 2), (window.innerHeight / 2), player_manager.chassis_get_coordinates().get_direction());
+		drawimage_rotation(canvas_context, tank_image_chassis, (window.innerWidth / 2), (window.innerHeight / 2), player_manager.chassis_get_coordinates().vector_get_direction());
 		drawimage_rotation(canvas_context, tank_image_turret,  (window.innerWidth / 2), (window.innerHeight / 2), player_manager.turret_get_direction());
 		// update player movement
 		player_manager.chassis_update_movement(rerender_interval);

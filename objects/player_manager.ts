@@ -1,18 +1,18 @@
-import Coordinates from "./coordinates";
 import KeyPressManager from "./keypress_manager";
+import Vector2D from "./vector_2d";
 
 export default class PlayerManager {
 
     // settings
-    private chassis_velocity: number = 200; // pixels per second
+    private chassis_velocity: number = 500; // pixels per second
 
     // states
-    private chassis_coordinate: Coordinates;
+    private chassis_coordinate: Vector2D;
     private chassis_movement:   boolean;
     private turret_direction:   number;
 
     constructor() {
-        this.chassis_coordinate = new Coordinates(0, 0, 0);
+        this.chassis_coordinate = new Vector2D(0, 0, 0, 0);
         this.chassis_movement   = false;
         this.turret_direction   = 0;
     }
@@ -27,18 +27,18 @@ export default class PlayerManager {
         let heading_direction = Math.atan(heading_y / heading_x);
         // patches the range of arctangent
         if (heading_x < 0) heading_direction += Math.PI;
-        this.chassis_coordinate.set(null, null, heading_direction);
+        this.chassis_coordinate.vector_set(null, null, heading_direction, 0);
     }
 
     public chassis_update_movement(rerender_interval: number) {
         if (!this.chassis_movement) return;
         const movement_distance = this.chassis_velocity * (rerender_interval / 1000);
-        const movement_x        = movement_distance * Math.cos(this.chassis_coordinate.get_direction());
-        const movement_y        = movement_distance * Math.sin(this.chassis_coordinate.get_direction());
-        this.chassis_coordinate.offset(movement_x, movement_y, 0);
+        const movement_x        = movement_distance * Math.cos(this.chassis_coordinate.vector_get_direction());
+        const movement_y        = movement_distance * Math.sin(this.chassis_coordinate.vector_get_direction());
+        this.chassis_coordinate.vector_offset(movement_x, movement_y, 0, 0);
     }
 
-    public chassis_get_coordinates(): Coordinates {
+    public chassis_get_coordinates(): Vector2D {
         return this.chassis_coordinate;
     }
 
