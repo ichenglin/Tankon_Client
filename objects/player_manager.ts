@@ -1,10 +1,11 @@
+import CollisionManager from "./collision_manager";
 import KeyPressManager from "./keypress_manager";
 import Vector2D from "./vector_2d";
 
 export default class PlayerManager {
 
     // settings
-    private chassis_velocity: number = 100; // pixels per second
+    private chassis_velocity: number = 500; // pixels per second
 
     // states
     private chassis_coordinate: Vector2D;
@@ -28,11 +29,15 @@ export default class PlayerManager {
         this.chassis_coordinate.vector_set(null, null, heading_new.vector_get_direction(), 0);
     }
 
-    public chassis_update_movement(rerender_interval: number) {
+    public chassis_update_movement(collision_manager: CollisionManager, rerender_interval: number) {
         if (!this.chassis_movement) return;
-        const movement_distance = this.chassis_velocity * (rerender_interval / 1000);
-        const movement_x        = movement_distance * Math.cos(this.chassis_coordinate.vector_get_direction());
-        const movement_y        = movement_distance * Math.sin(this.chassis_coordinate.vector_get_direction());
+        let movement_distance   = this.chassis_velocity * (rerender_interval / 1000);
+        // check collision with walls
+        const movement_collision = collision_manager.collision_get(this.chassis_coordinate);
+        if (movement_collision.collision_length !== null && movement_distance > movement_collision.collision_length) movement_distance = movement_collision.collision_length - 1E-4;
+        // apply movement
+        const movement_x         = movement_distance * Math.cos(this.chassis_coordinate.vector_get_direction());
+        const movement_y         = movement_distance * Math.sin(this.chassis_coordinate.vector_get_direction());
         this.chassis_coordinate.vector_offset(movement_x, movement_y, 0, 0);
     }
 

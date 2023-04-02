@@ -53,7 +53,8 @@ const Home: NextPageLayout = () => {
 			new Point2D(100, 200)
 		])])
 		collision_manager.hitbox_render(context_manager);
-		collision_manager.collision_get(player_manager.turret_get_coordinates(), context_manager);
+		const collision_coordinates = collision_manager.collision_get(player_manager.turret_get_coordinates()).collision_coordinates;
+		if (collision_coordinates !== null) context_manager.canvas_line(player_manager.turret_get_coordinates(), collision_coordinates);
 		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${player_manager.chassis_get_coordinates().point_get_x()}, ${player_manager.chassis_get_coordinates().point_get_y()})`, 10, 25);
@@ -61,7 +62,7 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_image("/tanks/chassis.png", player_manager.chassis_get_coordinates(), 1);
 		context_manager.canvas_image("/tanks/turret.png", player_manager.turret_get_coordinates(), 1);
 		// update player movement
-		player_manager.chassis_update_movement(rerender_interval);
+		player_manager.chassis_update_movement(collision_manager, rerender_interval);
 		window.requestAnimationFrame(canvas_rerender);
 	}
 
