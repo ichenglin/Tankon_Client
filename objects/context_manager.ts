@@ -8,9 +8,12 @@ export default class ContextManager {
     private canvas_viewfield: number; // coordinate unit on screen for x/y
 
     constructor(canvas_context: CanvasRenderingContext2D, canvas_viewfield: number) {
+        // variables
         this.canvas_context   = canvas_context;
         this.canvas_center    = new Point2D(0, 0);
         this.canvas_viewfield = canvas_viewfield;
+        // configuration
+        this.canvas_context.imageSmoothingEnabled = false;
     }
 
     public canvas_focus(canvas_center: Point2D): void {

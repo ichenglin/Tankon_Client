@@ -6,7 +6,8 @@ import styles from "@/styles/pages/Home.module.css";
 import { Sono } from "next/font/google";
 import KeyPressManager from "@/objects/keypress_manager";
 import PlayerManager from "@/objects/player_manager";
-import drawimage_rotation from "@/utilities/drawimage_rotation";
+import ContextManager from "@/objects/context_manager";
+import Point2D from "@/objects/point_2d";
 
 const font_sono = Sono({subsets: ["latin"]});
 
@@ -33,17 +34,21 @@ const Home: NextPageLayout = () => {
 		// render
 		const canvas_element = document.getElementById("canvas") as HTMLCanvasElement;
 		const canvas_context = canvas_element.getContext("2d") as CanvasRenderingContext2D;
-		canvas_context.clearRect(0, 0, canvas_element.width, canvas_element.height);
+		const context_manager = new ContextManager(canvas_context, 1000);
+		context_manager.canvas_focus(player_manager.chassis_get_coordinates());
+		context_manager.canvas_clear();
+		// some points for reference
+		context_manager.canvas_point(new Point2D(0, 0), 30);
+		context_manager.canvas_point(new Point2D(40, 40), 30);
+		context_manager.canvas_point(new Point2D(-40, 40), 30);
+		context_manager.canvas_point(new Point2D(40, -40), 30);
+		context_manager.canvas_point(new Point2D(-40, -40), 30);
 		// fps
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${player_manager.chassis_get_coordinates().point_get_x()}, ${player_manager.chassis_get_coordinates().point_get_y()})`, 10, 25);
 		// player character
-		const tank_image_chassis = new Image();
-		const tank_image_turret = new Image();
-		tank_image_chassis.src = "/tanks/chassis.png";
-		tank_image_turret.src = "/tanks/turret.png";
-		drawimage_rotation(canvas_context, tank_image_chassis, (window.innerWidth / 2), (window.innerHeight / 2), player_manager.chassis_get_coordinates().vector_get_direction());
-		drawimage_rotation(canvas_context, tank_image_turret,  (window.innerWidth / 2), (window.innerHeight / 2), player_manager.turret_get_direction());
+		context_manager.canvas_image("/tanks/chassis.png", player_manager.chassis_get_coordinates(), 1);
+		context_manager.canvas_image("/tanks/turret.png", player_manager.turret_get_coordinates(), 1);
 		// update player movement
 		player_manager.chassis_update_movement(rerender_interval);
 		window.requestAnimationFrame(canvas_rerender);
