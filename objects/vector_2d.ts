@@ -10,6 +10,15 @@ export default class Vector2D extends Point2D {
         this.vector_set(null, null, vector_direction, vector_magnitude);
     }
 
+    public static from_parametric(point_x: number, point_y: number, heading_x: number, heading_y: number, heading_length: number | null): Vector2D {
+        // direction of vector (later patches the range of arctangent)
+        let heading_direction = Math.atan(heading_y / heading_x);
+        if (heading_x < 0) heading_direction += Math.PI;
+        // magnitude of vector
+        const heading_magnitude = (heading_length !== null) ? heading_length : Math.sqrt(Math.pow(heading_x, 2) + Math.pow(heading_y, 2));
+        return new Vector2D(point_x, point_y, heading_direction, heading_magnitude);
+    }
+
     public vector_set(point_x: number | null, point_y: number | null, vector_direction: number | null, vector_magnitude: number | null) {
         this.point_set(point_x, point_y);
         if (vector_direction !== null) this.vector_direction = vector_direction;

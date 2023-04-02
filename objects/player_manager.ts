@@ -4,7 +4,7 @@ import Vector2D from "./vector_2d";
 export default class PlayerManager {
 
     // settings
-    private chassis_velocity: number = 500; // pixels per second
+    private chassis_velocity: number = 100; // pixels per second
 
     // states
     private chassis_coordinate: Vector2D;
@@ -24,10 +24,8 @@ export default class PlayerManager {
         this.chassis_movement = heading_x !== 0 || heading_y !== 0;
         if (!this.chassis_movement) return;
         // update heading direction
-        let heading_direction = Math.atan(heading_y / heading_x);
-        // patches the range of arctangent
-        if (heading_x < 0) heading_direction += Math.PI;
-        this.chassis_coordinate.vector_set(null, null, heading_direction, 0);
+        const heading_new = Vector2D.from_parametric(0, 0, heading_x, heading_y, 0);
+        this.chassis_coordinate.vector_set(null, null, heading_new.vector_get_direction(), 0);
     }
 
     public chassis_update_movement(rerender_interval: number) {
@@ -47,14 +45,17 @@ export default class PlayerManager {
         const heading_y = ((window.innerHeight / 2) - mouse_event.pageY);
         if (heading_x === 0 && heading_y === 0) return;
         // update heading direction
-        let heading_direction = Math.atan(heading_y / heading_x);
-        // patches the range of arctangent
-        if (heading_x < 0) heading_direction += Math.PI;
-        this.turret_direction = heading_direction;
+        const heading_new = Vector2D.from_parametric(0, 0, heading_x, heading_y, 0);
+        this.turret_direction = heading_new.vector_get_direction();
     }
 
-    public turret_get_direction(): number {
-        return this.turret_direction;
+    public turret_get_coordinates(): Vector2D {
+        return new Vector2D(
+            this.chassis_coordinate.point_get_x(),
+            this.chassis_coordinate.point_get_y(),
+            this.turret_direction,
+            0
+        );
     }
 
 }
