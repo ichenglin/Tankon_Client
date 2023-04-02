@@ -8,14 +8,16 @@ import KeyPressManager from "@/objects/keypress_manager";
 import PlayerManager from "@/objects/player_manager";
 import ContextManager from "@/objects/context_manager";
 import Point2D from "@/objects/point_2d";
+import CollisionManager, { CollisionHitbox } from "@/objects/collision_manager";
 
 const font_sono = Sono({subsets: ["latin"]});
 
 const Home: NextPageLayout = () => {
 
 	let rerender_previous: number | null = null;
-	const keypress_manager = new KeyPressManager();
-	const player_manager   = new PlayerManager();
+	const keypress_manager  = new KeyPressManager();
+	const player_manager    = new PlayerManager();
+	const collision_manager = new CollisionManager([]);
 
 	useEffect(() => {
 		canvas_rescale();
@@ -38,12 +40,21 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_focus(player_manager.chassis_get_coordinates());
 		context_manager.canvas_clear();
 		// some points for reference
-		context_manager.canvas_point(new Point2D(0, 0), 30);
-		context_manager.canvas_point(new Point2D(40, 40), 30);
-		context_manager.canvas_point(new Point2D(-40, 40), 30);
-		context_manager.canvas_point(new Point2D(40, -40), 30);
-		context_manager.canvas_point(new Point2D(-40, -40), 30);
-		// fps
+		context_manager.canvas_point(new Point2D(0, 0), 10);
+		context_manager.canvas_point(new Point2D(40, 40), 10);
+		context_manager.canvas_point(new Point2D(-40, 40), 10);
+		context_manager.canvas_point(new Point2D(40, -40), 10);
+		context_manager.canvas_point(new Point2D(-40, -40), 10);
+
+		collision_manager.hitbox_set([new CollisionHitbox([
+			new Point2D(100, 200),
+			new Point2D(-100, 200),
+			new Point2D(-150, 300),
+			new Point2D(100, 200)
+		])])
+		collision_manager.hitbox_render(context_manager);
+		collision_manager.collision_get(player_manager.turret_get_coordinates(), context_manager);
+		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${player_manager.chassis_get_coordinates().point_get_x()}, ${player_manager.chassis_get_coordinates().point_get_y()})`, 10, 25);
 		// player character

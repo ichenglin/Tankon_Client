@@ -7,14 +7,16 @@ export default class Point2D {
         this.point_set(point_x, point_y);
     }
 
-    public point_set(point_x: number | null, point_y: number | null) {
+    public point_set(point_x: number | null, point_y: number | null): Point2D {
         if (point_x !== null) this.point_x = point_x;
         if (point_y !== null) this.point_y = point_y;
+        return this;
     }
 
-    public point_offset(offset_x: number, offset_y: number) {
+    public point_offset(offset_x: number, offset_y: number): Point2D {
         this.point_x += offset_x;
         this.point_y += offset_y;
+        return this;
     }
 
     public point_get_x(): number {
@@ -23,6 +25,10 @@ export default class Point2D {
 
     public point_get_y(): number {
         return this.point_y;
+    }
+
+    public point_duplicate(): Point2D {
+        return new Point2D(this.point_get_x(), this.point_get_y());
     }
 
 }

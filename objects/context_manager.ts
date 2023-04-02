@@ -22,7 +22,24 @@ export default class ContextManager {
 
     public canvas_point(point_coordinates: Point2D, point_radius: number): void {
         const point_coordinates_relative = this.canvas_coordinates_relative(point_coordinates);
-        this.canvas_context.fillRect(point_coordinates_relative.point_get_x(), point_coordinates_relative.point_get_y(), point_radius, point_radius);
+        const text_size_relative = this.canvas_scale_relative(point_radius);
+        this.canvas_context.fillRect(point_coordinates_relative.point_get_x() - (text_size_relative/2), point_coordinates_relative.point_get_y() - (text_size_relative/2), text_size_relative, text_size_relative);
+    }
+
+    public canvas_line(line_origin: Point2D, line_destination: Point2D): void {
+        const line_origin_relative      = this.canvas_coordinates_relative(line_origin);
+        const line_destination_relative = this.canvas_coordinates_relative(line_destination);
+        this.canvas_context.beginPath();
+        this.canvas_context.moveTo(line_origin_relative.point_get_x(), line_origin_relative.point_get_y());
+        this.canvas_context.lineTo(line_destination_relative.point_get_x(), line_destination_relative.point_get_y());
+        this.canvas_context.stroke();
+    }
+
+    public canvas_text(text_content: string, text_coordinates: Point2D, text_font: string, text_size: number): void {
+        const text_coordinates_relative = this.canvas_coordinates_relative(text_coordinates);
+        const text_size_relative = this.canvas_scale_relative(text_size);
+        this.canvas_context.font  = `${text_size_relative}px ${text_font}`;
+		this.canvas_context.fillText(text_content, text_coordinates_relative.point_get_x(), text_coordinates_relative.point_get_y());
     }
 
     public canvas_image(image_source: string, image_coordinates: Vector2D, image_scale: number = 1): void {
