@@ -19,6 +19,10 @@ export default class Vector2D extends Point2D {
         return new Vector2D(point_x, point_y, heading_direction, heading_magnitude);
     }
 
+    public static from_point(point_object: Point2D, vector_direction: number, vector_magnitude: number): Vector2D {
+        return new Vector2D(point_object.point_get_x(), point_object.point_get_y(), vector_direction, vector_magnitude);
+    }
+
     public vector_set(point_x: number | null, point_y: number | null, vector_direction: number | null, vector_magnitude: number | null): Vector2D {
         this.point_set(point_x, point_y);
         if (vector_direction !== null) this.vector_direction = vector_direction;
@@ -31,6 +35,12 @@ export default class Vector2D extends Point2D {
         this.vector_direction += offset_direction;
         this.vector_magnitude += offset_magnitude;
         return this;
+    }
+
+    public vector_get_destination(): Point2D {
+        const destination_x = this.point_get_x() + (Math.cos(this.vector_direction) * this.vector_magnitude);
+        const destination_y = this.point_get_y() + (Math.sin(this.vector_direction) * this.vector_magnitude);
+        return new Point2D(destination_x, destination_y);
     }
 
     public vector_get_direction(): number {

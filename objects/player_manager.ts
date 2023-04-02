@@ -34,10 +34,16 @@ export default class PlayerManager {
         let movement_distance   = this.chassis_velocity * (rerender_interval / 1000);
         // check collision with walls
         const movement_collision = collision_manager.collision_get(this.chassis_coordinate);
-        if (movement_collision.collision_length !== null && movement_distance > movement_collision.collision_length) movement_distance = movement_collision.collision_length - 1E-4;
         // apply movement
-        const movement_x         = movement_distance * Math.cos(this.chassis_coordinate.vector_get_direction());
-        const movement_y         = movement_distance * Math.sin(this.chassis_coordinate.vector_get_direction());
+        let movement_x = 0, movement_y = 0;
+        if (movement_collision === null || movement_collision.collision_length > 1E-2) {
+            // free to move or collide into wall
+            if (movement_collision !== null && movement_distance > movement_collision.collision_length) movement_distance = movement_collision.collision_length - 1E-4;
+            movement_x = movement_distance * Math.cos(this.chassis_coordinate.vector_get_direction());
+            movement_y = movement_distance * Math.sin(this.chassis_coordinate.vector_get_direction());
+        } else {
+            // slide by wall
+        }
         this.chassis_coordinate.vector_offset(movement_x, movement_y, 0, 0);
     }
 

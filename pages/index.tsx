@@ -9,6 +9,7 @@ import PlayerManager from "@/objects/player_manager";
 import ContextManager from "@/objects/context_manager";
 import Point2D from "@/objects/point_2d";
 import CollisionManager, { CollisionHitbox } from "@/objects/collision_manager";
+import Vector2D from "@/objects/vector_2d";
 
 const font_sono = Sono({subsets: ["latin"]});
 
@@ -53,8 +54,16 @@ const Home: NextPageLayout = () => {
 			new Point2D(100, 200)
 		])])
 		collision_manager.hitbox_render(context_manager);
-		const collision_coordinates = collision_manager.collision_get(player_manager.turret_get_coordinates()).collision_coordinates;
-		if (collision_coordinates !== null) context_manager.canvas_line(player_manager.turret_get_coordinates(), collision_coordinates);
+		const turret_collision = collision_manager.collision_get(player_manager.turret_get_coordinates());
+		if (turret_collision !== null) {
+			context_manager.canvas_line(player_manager.turret_get_coordinates(), turret_collision.collision_coordinates);
+			const collision_normal = Vector2D.from_point(turret_collision.collision_coordinates, turret_collision.collision_normal, 100).vector_get_destination();
+			context_manager.canvas_point(collision_normal, 10);
+			context_manager.canvas_line(turret_collision.collision_coordinates, collision_normal);
+			const collision_reflect = Vector2D.from_point(turret_collision.collision_coordinates, turret_collision.collision_reflect, 1000).vector_get_destination();
+			context_manager.canvas_point(collision_reflect, 10);
+			context_manager.canvas_line(turret_collision.collision_coordinates, collision_reflect);
+		}
 		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${player_manager.chassis_get_coordinates().point_get_x()}, ${player_manager.chassis_get_coordinates().point_get_y()})`, 10, 25);
