@@ -37,10 +37,10 @@ export default class Vector2D extends Point2D {
         return this;
     }
 
-    public vector_get_destination(): Point2D {
+    public vector_get_destination(): Vector2D {
         const destination_x = this.point_get_x() + (Math.cos(this.vector_direction) * this.vector_magnitude);
         const destination_y = this.point_get_y() + (Math.sin(this.vector_direction) * this.vector_magnitude);
-        return new Point2D(destination_x, destination_y);
+        return new Vector2D(destination_x, destination_y, this.vector_direction, this.vector_magnitude);
     }
 
     public vector_get_direction(): number {

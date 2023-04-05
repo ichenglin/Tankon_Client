@@ -52,17 +52,32 @@ const Home: NextPageLayout = () => {
 			new Point2D(-100, 200),
 			new Point2D(-150, 300),
 			new Point2D(100, 200)
+		]),
+		new CollisionHitbox([
+			new Point2D(200, 100),
+			new Point2D(200, 0)
+		]),
+		new CollisionHitbox([
+			new Point2D(-200, 100),
+			new Point2D(-100, -300)
 		])])
 		collision_manager.hitbox_render(context_manager);
-		const turret_collision = collision_manager.collision_get(player_manager.turret_get_coordinates());
-		if (turret_collision !== null) {
-			context_manager.canvas_line(player_manager.turret_get_coordinates(), turret_collision.collision_coordinates);
-			const collision_normal = Vector2D.from_point(turret_collision.collision_coordinates, turret_collision.collision_normal, 100).vector_get_destination();
-			context_manager.canvas_point(collision_normal, 10);
-			context_manager.canvas_line(turret_collision.collision_coordinates, collision_normal);
-			const collision_reflect = Vector2D.from_point(turret_collision.collision_coordinates, turret_collision.collision_reflect, 1000).vector_get_destination();
-			context_manager.canvas_point(collision_reflect, 10);
-			context_manager.canvas_line(turret_collision.collision_coordinates, collision_reflect);
+		let reflection_origin  = player_manager.turret_get_coordinates();
+		let reflection_maximum = 10;
+		while (reflection_maximum-- >= 0) {
+			const reflection_collision   = collision_manager.collision_get(reflection_origin);
+			canvas_context.setLineDash([15, 10]);
+			if (reflection_collision === null) {
+				context_manager.canvas_line(reflection_origin, reflection_origin.vector_duplicate().vector_set(null, null, null, 1000).vector_get_destination());
+				canvas_context.setLineDash([]);
+				break;
+			}
+			context_manager.canvas_line(reflection_origin, reflection_collision.collision_coordinates);
+			canvas_context.setLineDash([]);
+			//const collision_normal = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_normal, 100).vector_get_destination();
+			//context_manager.canvas_point(collision_normal, 10);
+			//context_manager.canvas_line(reflection_collision.collision_coordinates, collision_normal);
+			reflection_origin = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_reflect, 1E-10).vector_get_destination();
 		}
 		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
