@@ -7,6 +7,10 @@ export default class Point2D {
         this.point_set(point_x, point_y);
     }
 
+    public point_distance(point_destination: Point2D): number {
+        return Math.sqrt(Math.pow((point_destination.point_get_x() - this.point_x), 2) + Math.pow((point_destination.point_get_y() - this.point_y), 2));
+    }
+
     public point_set(point_x: number | null, point_y: number | null): Point2D {
         if (point_x !== null) this.point_x = point_x;
         if (point_y !== null) this.point_y = point_y;

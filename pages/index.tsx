@@ -10,15 +10,17 @@ import ContextManager from "@/objects/context_manager";
 import Point2D from "@/objects/point_2d";
 import CollisionManager, { CollisionHitbox } from "@/objects/collision_manager";
 import Vector2D from "@/objects/vector_2d";
+import ProjectileManager from "@/objects/projectile_manager";
 
 const font_sono = Sono({subsets: ["latin"]});
 
 const Home: NextPageLayout = () => {
 
 	let rerender_previous: number | null = null;
-	const keypress_manager  = new KeyPressManager();
-	const player_manager    = new PlayerManager();
-	const collision_manager = new CollisionManager([]);
+	const keypress_manager   = new KeyPressManager();
+	const player_manager     = new PlayerManager();
+	const collision_manager  = new CollisionManager([]);
+	const projectile_manager = new ProjectileManager(collision_manager);
 
 	useEffect(() => {
 		canvas_rescale();
@@ -26,7 +28,22 @@ const Home: NextPageLayout = () => {
 		window.addEventListener("keydown",   canvas_keyevent);
 		window.addEventListener("keyup",     canvas_keyevent);
 		window.addEventListener("mousemove", canvas_mouseevent);
+		window.addEventListener("mousedown", () => projectile_manager.projectile_add(player_manager.turret_get_coordinates(), 1000, 10));
 		window.requestAnimationFrame(canvas_rerender);
+		collision_manager.hitbox_set([new CollisionHitbox([
+			new Point2D(100, 200),
+			new Point2D(-100, 200),
+			new Point2D(-150, 300),
+			new Point2D(100, 200)
+		]),
+		new CollisionHitbox([
+			new Point2D(200, 100),
+			new Point2D(200, 0)
+		]),
+		new CollisionHitbox([
+			new Point2D(-200, 100),
+			new Point2D(-100, -300)
+		])])
 	}, []);
 
 	function canvas_rerender(rerender_timestamp: number) {
@@ -47,20 +64,6 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_point(new Point2D(40, -40), 10);
 		context_manager.canvas_point(new Point2D(-40, -40), 10);
 
-		collision_manager.hitbox_set([new CollisionHitbox([
-			new Point2D(100, 200),
-			new Point2D(-100, 200),
-			new Point2D(-150, 300),
-			new Point2D(100, 200)
-		]),
-		new CollisionHitbox([
-			new Point2D(200, 100),
-			new Point2D(200, 0)
-		]),
-		new CollisionHitbox([
-			new Point2D(-200, 100),
-			new Point2D(-100, -300)
-		])])
 		collision_manager.hitbox_render(context_manager);
 		let reflection_origin  = player_manager.turret_get_coordinates();
 		let reflection_maximum = 10;
@@ -68,15 +71,15 @@ const Home: NextPageLayout = () => {
 			const reflection_collision   = collision_manager.collision_get(reflection_origin);
 			canvas_context.setLineDash([15, 10]);
 			if (reflection_collision === null) {
-				context_manager.canvas_line(reflection_origin, reflection_origin.vector_duplicate().vector_set(null, null, null, 1000).vector_get_destination());
+				context_manager.canvas_line(reflection_origin, reflection_origin.vector_duplicate().vector_set(null, null, null, 500).vector_get_destination());
 				canvas_context.setLineDash([]);
 				break;
 			}
 			context_manager.canvas_line(reflection_origin, reflection_collision.collision_coordinates);
 			canvas_context.setLineDash([]);
-			const collision_normal = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_normal, 100).vector_get_destination();
-			context_manager.canvas_point(collision_normal, 10);
-			context_manager.canvas_line(reflection_collision.collision_coordinates, collision_normal);
+			//const collision_normal = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_normal, 100).vector_get_destination();
+			//context_manager.canvas_point(collision_normal, 10);
+			//context_manager.canvas_line(reflection_collision.collision_coordinates, collision_normal);
 			reflection_origin = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_reflect, 1E-10).vector_get_destination();
 		}
 		// gui (written separately to ignore scaling)
@@ -87,6 +90,8 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_image("/tanks/turret.png", player_manager.turret_get_coordinates(), 1);
 		// update player movement
 		player_manager.chassis_update_movement(collision_manager, rerender_interval);
+		// projectiles
+		projectile_manager.projectile_render(context_manager);
 		window.requestAnimationFrame(canvas_rerender);
 	}
 
