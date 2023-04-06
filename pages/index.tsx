@@ -74,9 +74,9 @@ const Home: NextPageLayout = () => {
 			}
 			context_manager.canvas_line(reflection_origin, reflection_collision.collision_coordinates);
 			canvas_context.setLineDash([]);
-			//const collision_normal = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_normal, 100).vector_get_destination();
-			//context_manager.canvas_point(collision_normal, 10);
-			//context_manager.canvas_line(reflection_collision.collision_coordinates, collision_normal);
+			const collision_normal = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_normal, 100).vector_get_destination();
+			context_manager.canvas_point(collision_normal, 10);
+			context_manager.canvas_line(reflection_collision.collision_coordinates, collision_normal);
 			reflection_origin = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_reflect, 1E-10).vector_get_destination();
 		}
 		// gui (written separately to ignore scaling)

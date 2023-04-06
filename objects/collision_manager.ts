@@ -40,15 +40,16 @@ export default class CollisionManager {
         // process normal direction
         if (collision_slope === null) return null;
         const collision_normal_candidates = [collision_slope + (Math.PI*(1/2)), collision_slope + (Math.PI*(3/2))];
-        let collision_normal_direction = 0;
-        let collision_normal_acute     = 0;
+        const collision_origin_direction  = (origin_coordinates.vector_get_direction() + Math.PI) % (Math.PI*2);
+        let collision_normal_direction    = 0;
+        let collision_normal_acute        = Math.PI;
         for (let candidate_index = 0; candidate_index < collision_normal_candidates.length; candidate_index++) {
             const candidate_direction = collision_normal_candidates[candidate_index] % (Math.PI*2);
             const candidate_acute     = Math.min(
-                Math.abs(candidate_direction - origin_coordinates.vector_get_direction()),
-                Math.abs(origin_coordinates.vector_get_direction() - candidate_direction + (Math.PI*2))
+                Math.abs(candidate_direction - collision_origin_direction),
+                (Math.PI*2) - Math.abs(candidate_direction - collision_origin_direction)
             );
-            if (candidate_acute < collision_normal_acute) continue;
+            if (candidate_acute > collision_normal_acute) continue;
             collision_normal_direction = candidate_direction;
             collision_normal_acute     = candidate_acute;
         }

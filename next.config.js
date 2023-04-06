@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-	// reactStrictMode: true,
-}
 
-module.exports = nextConfig
+const next_production = process.env.NODE_ENV === "production";
+
+const next_configuration = {
+	// reactStrictMode: true,
+	compiler: (next_production) && {
+		removeConsole: {exclude: ["error"]}
+	}
+};
+
+module.exports = next_configuration;
