@@ -23,6 +23,10 @@ export default class ProjectileManager {
         }
     }
 
+    public projectile_get(): Projectile[] {
+        return this.projectile_active;
+    }
+
 }
 
 export class Projectile {

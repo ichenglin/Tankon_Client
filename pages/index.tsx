@@ -14,13 +14,14 @@ import ProjectileManager from "@/objects/projectile_manager";
 
 const font_sono = Sono({subsets: ["latin"]});
 
+export const keypress_manager   = new KeyPressManager();
+export const player_manager     = new PlayerManager();
+export const collision_manager  = new CollisionManager([]);
+export const projectile_manager = new ProjectileManager(collision_manager);
+
 const Home: NextPageLayout = () => {
 
 	let rerender_previous: number | null = null;
-	const keypress_manager   = new KeyPressManager();
-	const player_manager     = new PlayerManager();
-	const collision_manager  = new CollisionManager([]);
-	const projectile_manager = new ProjectileManager(collision_manager);
 
 	useEffect(() => {
 		canvas_rescale();
@@ -28,7 +29,8 @@ const Home: NextPageLayout = () => {
 		window.addEventListener("keydown",   canvas_keyevent);
 		window.addEventListener("keyup",     canvas_keyevent);
 		window.addEventListener("mousemove", canvas_mouseevent);
-		window.addEventListener("mousedown", () => projectile_manager.projectile_add(player_manager.turret_get_coordinates(), 1000, 10));
+		window.addEventListener("mousedown", canvas_mouseevent);
+		window.addEventListener("mouseup",   canvas_mouseevent);
 		window.requestAnimationFrame(canvas_rerender);
 		collision_manager.hitbox_set([new CollisionHitbox([
 			new Point2D(100, 200),
@@ -54,7 +56,7 @@ const Home: NextPageLayout = () => {
 		// render
 		const canvas_element = document.getElementById("canvas") as HTMLCanvasElement;
 		const canvas_context = canvas_element.getContext("2d") as CanvasRenderingContext2D;
-		const context_manager = new ContextManager(canvas_context, 1000);
+		const context_manager = new ContextManager(canvas_context, 2000);
 		context_manager.canvas_focus(player_manager.chassis_get_coordinates());
 		context_manager.canvas_clear();
 		// some points for reference
@@ -65,7 +67,7 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_point(new Point2D(-40, -40), 10);
 
 		collision_manager.hitbox_render(context_manager);
-		let reflection_origin  = player_manager.turret_get_coordinates();
+		/*let reflection_origin  = player_manager.turret_get_coordinates();
 		let reflection_maximum = 10;
 		while (reflection_maximum-- >= 0) {
 			const reflection_collision   = collision_manager.collision_get(reflection_origin);
@@ -81,17 +83,16 @@ const Home: NextPageLayout = () => {
 			//context_manager.canvas_point(collision_normal, 10);
 			//context_manager.canvas_line(reflection_collision.collision_coordinates, collision_normal);
 			reflection_origin = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_reflect, 1E-10).vector_get_destination();
-		}
+		}*/
 		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
-		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${player_manager.chassis_get_coordinates().point_get_x()}, ${player_manager.chassis_get_coordinates().point_get_y()})`, 10, 25);
-		// player character
+		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${Math.floor(player_manager.chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
+		// player and projectiles
 		context_manager.canvas_image("/tanks/chassis.png", player_manager.chassis_get_coordinates(), 1);
+		projectile_manager.projectile_render(context_manager);
 		context_manager.canvas_image("/tanks/turret.png", player_manager.turret_get_coordinates(), 1);
 		// update player movement
 		player_manager.chassis_update_movement(collision_manager, rerender_interval);
-		// projectiles
-		projectile_manager.projectile_render(context_manager);
 		window.requestAnimationFrame(canvas_rerender);
 	}
 
@@ -113,7 +114,9 @@ const Home: NextPageLayout = () => {
 	}
 
 	function canvas_mouseevent(mouse_event: MouseEvent) {
-		player_manager.turret_update_heading(mouse_event);
+		if      (mouse_event.type === "mousemove") player_manager.turret_update_heading(mouse_event);
+		else if (mouse_event.type === "mousedown") player_manager.turret_firemode(true);
+		else if (mouse_event.type === "mouseup")   player_manager.turret_firemode(false);
 	}
 
 	// check for unintended element render
