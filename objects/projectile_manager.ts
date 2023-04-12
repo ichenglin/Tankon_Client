@@ -104,8 +104,8 @@ export class ProjectileTrajectory {
             rebounce_anchors.push(rebounce_origin);
 			const reflection_collision = collision_manager.collision_get(rebounce_origin);
 			if (reflection_collision === null) {
-                rebounce_anchors.push(rebounce_origin.vector_duplicate().vector_set(null, null, null, 1000));
-                rebounce_distances.push(rebounce_distance + 1000);
+                rebounce_anchors.push(rebounce_origin.vector_duplicate().vector_set(null, null, null, 10000));
+                rebounce_distances.push(rebounce_distance + 10000);
                 break;
             }
             rebounce_distance += rebounce_origin.point_distance(reflection_collision.collision_coordinates);
