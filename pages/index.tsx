@@ -15,7 +15,8 @@ import ProjectileManager from "@/objects/projectile_manager";
 
 const font_sono = Sono({subsets: ["latin"]});
 
-export const socket_client = io(process.env.server_url as string);
+const socket_url = new URL(process.env.server_url as string);
+export const socket_client = io(socket_url.origin, {path: socket_url.pathname});
 
 export const context_manager    = new ContextManager(null, 2000);
 export const keypress_manager   = new KeyPressManager();
