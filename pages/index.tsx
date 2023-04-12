@@ -1,24 +1,31 @@
 import React, { useEffect } from "react";
 import { GetServerSideProps } from "next";
+import { io } from "socket.io-client";
 import { NextPageLayout } from "./_app";
 import styles from "@/styles/pages/Home.module.css";
 
 import { Sono } from "next/font/google";
+
 import KeyPressManager from "@/objects/keypress_manager";
 import PlayerManager from "@/objects/player_manager";
 import ContextManager from "@/objects/context_manager";
 import Point2D from "@/objects/point_2d";
 import CollisionManager, { CollisionHitbox } from "@/objects/collision_manager";
-import Vector2D from "@/objects/vector_2d";
 import ProjectileManager from "@/objects/projectile_manager";
 
 const font_sono = Sono({subsets: ["latin"]});
+
+export const socket_client = io(process.env.server_url as string);
 
 export const context_manager    = new ContextManager(null, 2000);
 export const keypress_manager   = new KeyPressManager();
 export const player_manager     = new PlayerManager();
 export const collision_manager  = new CollisionManager([]);
 export const projectile_manager = new ProjectileManager();
+
+export const player_client      = {
+	player_room: "Connecting..."
+};
 
 const Home: NextPageLayout = () => {
 
@@ -52,6 +59,13 @@ const Home: NextPageLayout = () => {
 			new Point2D(-200, 100),
 			new Point2D(-100, -300)
 		])])
+		// socket connection
+		socket_client.emit("room_join", "New Player", null, (join_status: any) => {
+			if (!join_status.success) return;
+			player_client.player_room = join_status.player_room;
+		});
+		socket_client.on("player_move",       (coordinates) => console.log(coordinates));
+		socket_client.on("player_projectile", (player_projectile) => projectile_manager.projectile_register(player_projectile));
 	}, []);
 
 	function canvas_rerender(rerender_timestamp: number) {
@@ -91,7 +105,7 @@ const Home: NextPageLayout = () => {
 		}*/
 		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
-		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${Math.floor(player_manager.chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
+		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Server: ${player_client.player_room}   Coordinates: (${Math.floor(player_manager.chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
 		// player and projectiles
 		context_manager.canvas_image("/tanks/chassis.png", player_manager.chassis_get_coordinates(), 1);
 		projectile_manager.projectile_render();

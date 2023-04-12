@@ -1,4 +1,4 @@
-import { collision_manager, context_manager } from "@/pages";
+import { collision_manager, context_manager, socket_client } from "@/pages";
 import Vector2D from "./vector_2d";
 
 export default class ProjectileManager {
@@ -8,7 +8,19 @@ export default class ProjectileManager {
     constructor() {}
 
     public projectile_add(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number): void {
-        this.projectile_active.push(new Projectile(projectile_origin, projectile_velocity, projectile_rebounces));
+        const projectile_new = new Projectile(projectile_origin, projectile_velocity, projectile_rebounces);
+        this.projectile_active.push(projectile_new);
+        socket_client.emit("player_projectile", projectile_new);
+    }
+
+    public projectile_register(projectile_object: any): void {
+        Object.setPrototypeOf(projectile_object.projectile_trajectory.projectile_origin, Vector2D.prototype);
+        this.projectile_active.push(new Projectile(
+            projectile_object.projectile_trajectory.projectile_origin,
+            projectile_object.projectile_velocity,
+            projectile_object.projectile_trajectory.projectile_rebounces,
+            projectile_object.projectile_birthday
+        ));
     }
 
     public projectile_render(): void {
@@ -31,10 +43,10 @@ export class Projectile {
     private projectile_velocity:   number;
     private projectile_birthday:   number;
 
-    constructor(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number) {
+    constructor(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number, projectile_birthday: number = Date.now()) {
         this.projectile_trajectory = new ProjectileTrajectory(projectile_origin, projectile_rebounces);
-        this.projectile_velocity = projectile_velocity;
-        this.projectile_birthday   = Date.now();
+        this.projectile_velocity   = projectile_velocity;
+        this.projectile_birthday   = projectile_birthday;
     }
 
     public coordinates_get(): Vector2D {

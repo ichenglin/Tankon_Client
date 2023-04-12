@@ -6,6 +6,9 @@ const next_configuration = {
 	// reactStrictMode: true,
 	compiler: (next_production) && {
 		removeConsole: {exclude: ["error"]}
+	},
+	env: {
+		server_url: (next_production) ? "https://backend.runtimecloud.com/tankon" : "http://localhost:3001"
 	}
 };
 
