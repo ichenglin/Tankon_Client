@@ -14,16 +14,22 @@ import ProjectileManager from "@/objects/projectile_manager";
 
 const font_sono = Sono({subsets: ["latin"]});
 
+export const context_manager    = new ContextManager(null, 2000);
 export const keypress_manager   = new KeyPressManager();
 export const player_manager     = new PlayerManager();
 export const collision_manager  = new CollisionManager([]);
-export const projectile_manager = new ProjectileManager(collision_manager);
+export const projectile_manager = new ProjectileManager();
 
 const Home: NextPageLayout = () => {
 
 	let rerender_previous: number | null = null;
 
 	useEffect(() => {
+		// assign canvas context to manager
+		const canvas_element = document.getElementById("canvas") as HTMLCanvasElement;
+		const canvas_context = canvas_element.getContext("2d") as CanvasRenderingContext2D;
+		context_manager.canvas_element(canvas_context);
+		// register events
 		canvas_rescale();
 		window.addEventListener("resize",    canvas_rescale);
 		window.addEventListener("keydown",   canvas_keyevent);
@@ -56,7 +62,6 @@ const Home: NextPageLayout = () => {
 		// render
 		const canvas_element = document.getElementById("canvas") as HTMLCanvasElement;
 		const canvas_context = canvas_element.getContext("2d") as CanvasRenderingContext2D;
-		const context_manager = new ContextManager(canvas_context, 2000);
 		context_manager.canvas_focus(player_manager.chassis_get_coordinates());
 		context_manager.canvas_clear();
 		// some points for reference
@@ -66,7 +71,7 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_point(new Point2D(40, -40), 10);
 		context_manager.canvas_point(new Point2D(-40, -40), 10);
 
-		collision_manager.hitbox_render(context_manager);
+		collision_manager.hitbox_render();
 		/*let reflection_origin  = player_manager.turret_get_coordinates();
 		let reflection_maximum = 10;
 		while (reflection_maximum-- >= 0) {
@@ -89,10 +94,10 @@ const Home: NextPageLayout = () => {
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Coordinates: (${Math.floor(player_manager.chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
 		// player and projectiles
 		context_manager.canvas_image("/tanks/chassis.png", player_manager.chassis_get_coordinates(), 1);
-		projectile_manager.projectile_render(context_manager);
+		projectile_manager.projectile_render();
 		context_manager.canvas_image("/tanks/turret.png", player_manager.turret_get_coordinates(), 1);
 		// update player movement
-		player_manager.chassis_update_movement(collision_manager, rerender_interval);
+		player_manager.chassis_update_movement(rerender_interval);
 		window.requestAnimationFrame(canvas_rerender);
 	}
 
@@ -110,7 +115,7 @@ const Home: NextPageLayout = () => {
 		if      (key_event.repeat) return;
 		if      (key_event.type === "keydown") keypress_manager.set_press(key_event.key);
 		else if (key_event.type === "keyup")   keypress_manager.set_release(key_event.key);
-		player_manager.chassis_update_heading(keypress_manager);
+		player_manager.chassis_update_heading();
 	}
 
 	function canvas_mouseevent(mouse_event: MouseEvent) {

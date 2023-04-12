@@ -1,6 +1,4 @@
-import { projectile_manager } from "@/pages";
-import CollisionManager from "./collision_manager";
-import KeyPressManager from "./keypress_manager";
+import { collision_manager, keypress_manager, projectile_manager } from "@/pages";
 import Vector2D from "./vector_2d";
 
 export default class PlayerManager {
@@ -54,7 +52,7 @@ export default class PlayerManager {
         );
     }
 
-    public chassis_update_heading(keypress_manager: KeyPressManager) {
+    public chassis_update_heading() {
         const heading_x         = (keypress_manager.get_press("d") as unknown as number) - (keypress_manager.get_press("a") as unknown as number);
         const heading_y         = (keypress_manager.get_press("w") as unknown as number) - (keypress_manager.get_press("s") as unknown as number);
         // check if player moves
@@ -65,7 +63,7 @@ export default class PlayerManager {
         this.chassis_coordinate.vector_set(null, null, heading_new.vector_get_direction(), 0);
     }
 
-    public chassis_update_movement(collision_manager: CollisionManager, rerender_interval: number) {
+    public chassis_update_movement(rerender_interval: number) {
         if (!this.chassis_movement) return;
         let movement_distance   = this.chassis_velocity * (rerender_interval / 1000);
         // check collision with walls

@@ -1,21 +1,17 @@
-import CollisionManager from "./collision_manager";
-import ContextManager from "./context_manager";
+import { collision_manager, context_manager } from "@/pages";
 import Vector2D from "./vector_2d";
 
 export default class ProjectileManager {
 
-    private collision_manager: CollisionManager;
     private projectile_active: Projectile[] = [];
 
-    constructor(collision_manager: CollisionManager) {
-        this.collision_manager = collision_manager;
-    }
+    constructor() {}
 
     public projectile_add(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number): void {
-        this.projectile_active.push(new Projectile(projectile_origin, projectile_velocity, projectile_rebounces, this.collision_manager));
+        this.projectile_active.push(new Projectile(projectile_origin, projectile_velocity, projectile_rebounces));
     }
 
-    public projectile_render(context_manager: ContextManager): void {
+    public projectile_render(): void {
         this.projectile_active = this.projectile_active.filter(loop_projectile => loop_projectile.projectile_alive());
         for (let projectile_index = 0; projectile_index < this.projectile_active.length; projectile_index++) {
             const projectile_object = this.projectile_active[projectile_index];
@@ -35,8 +31,8 @@ export class Projectile {
     private projectile_velocity:   number;
     private projectile_birthday:   number;
 
-    constructor(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number, collision_manager: CollisionManager) {
-        this.projectile_trajectory = new ProjectileTrajectory(projectile_origin, projectile_rebounces, collision_manager);
+    constructor(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number) {
+        this.projectile_trajectory = new ProjectileTrajectory(projectile_origin, projectile_rebounces);
         this.projectile_velocity = projectile_velocity;
         this.projectile_birthday   = Date.now();
     }
@@ -63,10 +59,10 @@ export class ProjectileTrajectory {
     private trajectory_anchors:   Vector2D[] = [];
     private trajectory_distances: number[]   = [];
 
-    constructor(projectile_origin: Vector2D, projectile_rebounces: number, collision_manager: CollisionManager) {
+    constructor(projectile_origin: Vector2D, projectile_rebounces: number) {
         this.projectile_origin    = projectile_origin;
         this.projectile_rebounces = projectile_rebounces;
-        this.anchor_update(collision_manager);
+        this.anchor_update();
     }
 
     public coordinates_get(progress_distance: number): Vector2D {
@@ -86,7 +82,7 @@ export class ProjectileTrajectory {
         return this.trajectory_distances[this.trajectory_distances.length - 1];
     }
 
-    private anchor_update(collision_manager: CollisionManager): void {
+    private anchor_update(): void {
         let rebounce_origin    = this.projectile_origin;
         let rebounce_distance  = 0;
         let rebounce_available = this.projectile_rebounces;

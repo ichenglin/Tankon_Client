@@ -1,4 +1,4 @@
-import ContextManager from "./context_manager";
+import { context_manager } from "@/pages";
 import Point2D from "./point_2d";
 import Vector2D from "./vector_2d";
 
@@ -68,7 +68,7 @@ export default class CollisionManager {
         this.collision_hitboxes = collision_hitboxes;
     }
 
-    public hitbox_render(context_manager: ContextManager): void {
+    public hitbox_render(): void {
         for (let hitbox_index = 0; hitbox_index < this.collision_hitboxes.length; hitbox_index++) {
             const hitbox_anchors = this.collision_hitboxes[hitbox_index].anchor_get();
             for (let border_index = 0; border_index < hitbox_anchors.length - 1; border_index++ ) {
