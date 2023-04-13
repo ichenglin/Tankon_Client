@@ -25,7 +25,8 @@ export const collision_manager  = new CollisionManager([]);
 export const projectile_manager = new ProjectileManager();
 
 export const player_client      = {
-	player_room: "Connecting..."
+	connection_transport: "Unknown",
+	player_room:          "Connecting..."
 };
 
 const Home: NextPageLayout = () => {
@@ -46,6 +47,7 @@ const Home: NextPageLayout = () => {
 		window.addEventListener("mousedown", canvas_mouseevent);
 		window.addEventListener("mouseup",   canvas_mouseevent);
 		window.requestAnimationFrame(canvas_rerender);
+		(window as any).player_data = player_client;
 		collision_manager.hitbox_set([new CollisionHitbox([
 			new Point2D(100, 200),
 			new Point2D(-100, 200),
@@ -61,11 +63,14 @@ const Home: NextPageLayout = () => {
 			new Point2D(-100, -300)
 		])])
 		// socket connection
+		const socket_engine                = socket_client.io.engine;
+		player_client.connection_transport = socket_engine.transport.name;
+		socket_engine.once("upgrade", () => player_client.connection_transport = socket_engine.transport.name);
 		socket_client.emit("room_join", "New Player", null, (join_status: any) => {
 			if (!join_status.success) return;
 			player_client.player_room = join_status.player_room;
 		});
-		socket_client.on("player_move",       (coordinates) => console.log(coordinates));
+		//socket_client.on("player_move",       (coordinates) => console.log(coordinates));
 		socket_client.on("player_projectile", (player_projectile) => projectile_manager.projectile_register(player_projectile));
 	}, []);
 
