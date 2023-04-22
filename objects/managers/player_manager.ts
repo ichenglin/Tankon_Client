@@ -1,5 +1,5 @@
-import { collision_manager, keypress_manager, projectile_manager, socket_client } from "@/pages";
-import Vector2D from "./vector_2d";
+import { collision_manager, keypress_manager, projectile_manager, socket_manager } from "@/pages";
+import Vector2D from "../vector_2d";
 
 export default class PlayerManager {
 
@@ -79,7 +79,7 @@ export default class PlayerManager {
             // slide by wall
         }
         this.chassis_coordinate.vector_offset(movement_x, movement_y, 0, 0);
-        socket_client.emit("player_move", this.chassis_coordinate);
+        socket_manager.client_get().emit("player_move", this.chassis_coordinate);
     }
 
     public chassis_get_coordinates(): Vector2D {

@@ -1,5 +1,5 @@
-import Point2D from "./point_2d";
-import Vector2D from "./vector_2d";
+import Point2D from "../point_2d";
+import Vector2D from "../vector_2d";
 
 export default class ContextManager {
 

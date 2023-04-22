@@ -6,28 +6,27 @@ import styles from "@/styles/pages/Home.module.css";
 
 import { Sono } from "next/font/google";
 
-import KeyPressManager from "@/objects/keypress_manager";
-import PlayerManager from "@/objects/player_manager";
-import ContextManager from "@/objects/context_manager";
+import KeyPressManager from "@/objects/managers/keypress_manager";
+import PlayerManager from "@/objects/managers/player_manager";
+import ContextManager from "@/objects/managers/context_manager";
 import Point2D from "@/objects/point_2d";
-import CollisionManager, { CollisionHitbox } from "@/objects/collision_manager";
-import ProjectileManager from "@/objects/projectile_manager";
+import CollisionManager, { CollisionHitbox } from "@/objects/managers/collision_manager";
+import ProjectileManager from "@/objects/managers/projectile_manager";
+import SocketManager from "@/objects/managers/socket_manager";
 
 const font_sono = Sono({subsets: ["latin"]});
-
-const socket_url = new URL(process.env.server_url as string);
-export const socket_client = io(socket_url.origin, {path: socket_url.pathname});
-
-export const context_manager    = new ContextManager(null, 2000);
-export const keypress_manager   = new KeyPressManager();
-export const player_manager     = new PlayerManager();
-export const collision_manager  = new CollisionManager([]);
-export const projectile_manager = new ProjectileManager();
 
 export const player_client      = {
 	connection_transport: "Unknown",
 	player_room:          "Offline"
 };
+
+export const socket_manager     = new SocketManager(process.env.server_url as string);
+export const context_manager    = new ContextManager(null, 2000);
+export const keypress_manager   = new KeyPressManager();
+export const player_manager     = new PlayerManager();
+export const collision_manager  = new CollisionManager([]);
+export const projectile_manager = new ProjectileManager();
 
 const Home: NextPageLayout = () => {
 
@@ -62,16 +61,6 @@ const Home: NextPageLayout = () => {
 			new Point2D(-200, 100),
 			new Point2D(-100, -300)
 		])])
-		// socket connection
-		const socket_engine                = socket_client.io.engine;
-		player_client.connection_transport = socket_engine.transport.name;
-		socket_engine.once("upgrade", () => player_client.connection_transport = socket_engine.transport.name);
-		socket_client.emit("room_join", "New Player", null, (join_status: any) => {
-			if (!join_status.success) return;
-			player_client.player_room = join_status.player_room;
-		});
-		//socket_client.on("player_move",       (coordinates) => console.log(coordinates));
-		socket_client.on("player_projectile", (player_projectile) => projectile_manager.projectile_register(player_projectile));
 	}, []);
 
 	function canvas_rerender(rerender_timestamp: number) {

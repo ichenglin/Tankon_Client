@@ -1,5 +1,5 @@
-import { collision_manager, context_manager, socket_client } from "@/pages";
-import Vector2D from "./vector_2d";
+import { collision_manager, context_manager, socket_manager } from "@/pages";
+import Vector2D from "../vector_2d";
 
 export default class ProjectileManager {
 
@@ -10,7 +10,7 @@ export default class ProjectileManager {
     public projectile_add(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number): void {
         const projectile_new = new Projectile(projectile_origin, projectile_velocity, projectile_rebounces);
         this.projectile_active.push(projectile_new);
-        socket_client.emit("player_projectile", projectile_new);
+        socket_manager.client_get().emit("player_projectile", projectile_new);
     }
 
     public projectile_register(projectile_object: any): void {
