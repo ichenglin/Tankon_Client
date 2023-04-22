@@ -7,11 +7,14 @@ export default class ContextManager {
     private canvas_center:    Point2D;
     private canvas_viewfield: number; // coordinate unit on screen for x/y
 
+    private image_cache:      Map<string, HTMLImageElement>;
+
     constructor(canvas_context: CanvasRenderingContext2D | null, canvas_viewfield: number) {
         // variables
         this.canvas_context   = canvas_context;
         this.canvas_center    = new Point2D(0, 0);
         this.canvas_viewfield = canvas_viewfield;
+        this.image_cache      = new Map<string, HTMLImageElement>();
         this.canvas_element(canvas_context);
     }
 
@@ -59,8 +62,7 @@ export default class ContextManager {
         // only draw when context is set
         if (this.canvas_context === null) return;
         // image object
-        const image_element = new Image();
-        image_element.src = image_source;
+        const image_element = this.canvas_image_cache(image_source);
         // image location
         const image_coordinates_relative = this.canvas_coordinates_relative(image_coordinates);
         const image_width_relative       = this.canvas_scale_relative(image_element.width)  * image_scale;
@@ -78,6 +80,17 @@ export default class ContextManager {
         if (this.canvas_context === null) return;
         // draw
         this.canvas_context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+
+    private canvas_image_cache(image_source: string): HTMLImageElement {
+        // image already cached
+        const image_cached = this.image_cache.get(image_source);
+        if (image_cached !== undefined) return image_cached;
+        // image not cached
+        const image_element = new Image();
+        image_element.src = image_source;
+        this.image_cache.set(image_source, image_element);
+        return image_element;
     }
 
     private canvas_coordinates_relative<PointVector2D extends Point2D>(point_coordinates: PointVector2D): Point2D {

@@ -26,7 +26,7 @@ export const projectile_manager = new ProjectileManager();
 
 export const player_client      = {
 	connection_transport: "Unknown",
-	player_room:          "Connecting..."
+	player_room:          "Offline"
 };
 
 const Home: NextPageLayout = () => {
