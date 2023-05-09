@@ -2,11 +2,13 @@ import Vector2D from "./vector_2d";
 
 export default class Player {
 
+    private player_profile:     PlayerProfile;
     private player_tank:        PlayerTank;
     private player_movement:    PlayerMovement;
     private turret_direction:   number;
 
-    constructor() {
+    constructor(player_profile: PlayerProfile) {
+        this.player_profile = player_profile;
         this.player_tank = {
             chassis_velocity: 500, // pixels per second
             turret_firerate:  0.15 // shells per second
@@ -44,6 +46,15 @@ export default class Player {
     public tank_get(): PlayerTank {
         return this.player_tank;
     }
+
+    public profile_get(): PlayerProfile {
+        return this.player_profile;
+    }
+}
+
+export interface PlayerProfile {
+    player_id:       string,
+    player_username: string
 }
 
 export interface PlayerTank {

@@ -1,5 +1,5 @@
-import { collision_manager, keypress_manager, projectile_manager, socket_manager } from "@/pages";
-import Player, { PlayerMovement } from "../player";
+import { collision_manager, keypress_manager, socket_manager } from "@/pages";
+import Player, { PlayerProfile } from "../player";
 import Vector2D from "../vector_2d";
 
 export default class PlayerManager {
@@ -10,7 +10,7 @@ export default class PlayerManager {
 
     constructor() {
         this.player_online       = new Map<string, Player>();
-        this.controller_player   = new Player();
+        this.controller_player   = new Player({player_id: "", player_username: ""});
     }
 
     public turret_update_heading(mouse_event: MouseEvent) {
@@ -54,8 +54,12 @@ export default class PlayerManager {
         return this.controller_player;
     }
 
-    public player_add(player_id: string): void {
-        this.player_online.set(player_id, new Player());
+    public player_add(player_profile: PlayerProfile): void {
+        this.player_online.set(player_profile.player_id, new Player(player_profile));
+    }
+
+    public player_remove(player_id: string): void {
+        this.player_online.delete(player_id);
     }
 
     public player_get(player_id: string): Player | undefined {

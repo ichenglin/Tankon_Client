@@ -109,7 +109,7 @@ const Home: NextPageLayout = () => {
 		}*/
 		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
-		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Server: ${player_client.player_room}   Coordinates: (${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
+		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Server: ${player_client.player_room}   Players: ${player_manager.player_all().length + 1}/10   Coordinates: (${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
 		// player and projectiles
 		context_manager.canvas_image("/tanks/chassis.png", player_manager.controller_get().chassis_get_coordinates(), 1);
 		projectile_manager.projectile_render();
@@ -118,8 +118,10 @@ const Home: NextPageLayout = () => {
 		const player_online = player_manager.player_all();
 		for (let player_index = 0; player_index < player_online.length; player_index++) {
 			const player_object = player_online[player_index];
+			const player_name   = player_object.profile_get().player_username;
 			context_manager.canvas_image("/tanks/chassis.png", player_object.chassis_get_coordinates(), 1);
 			context_manager.canvas_image("/tanks/turret.png", player_object.turret_get_coordinates(), 1);
+			context_manager.canvas_text(player_name, player_object.chassis_get_coordinates().vector_duplicate().vector_offset((-7 * player_name.length), -70, 0, 0), "Arial", 30);
 		}
 		// update player movement
 		window.requestAnimationFrame(canvas_rerender);
