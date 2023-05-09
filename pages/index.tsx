@@ -114,6 +114,13 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_image("/tanks/chassis.png", player_manager.controller_get().chassis_get_coordinates(), 1);
 		projectile_manager.projectile_render();
 		context_manager.canvas_image("/tanks/turret.png", player_manager.controller_get().turret_get_coordinates(), 1);
+		// render enemies
+		const player_online = player_manager.player_all();
+		for (let player_index = 0; player_index < player_online.length; player_index++) {
+			const player_object = player_online[player_index];
+			context_manager.canvas_image("/tanks/chassis.png", player_object.chassis_get_coordinates(), 1);
+			context_manager.canvas_image("/tanks/turret.png", player_object.turret_get_coordinates(), 1);
+		}
 		// update player movement
 		window.requestAnimationFrame(canvas_rerender);
 	}
@@ -132,7 +139,7 @@ const Home: NextPageLayout = () => {
 		if      (key_event.repeat) return;
 		if      (key_event.type === "keydown") keypress_manager.set_press(key_event.key);
 		else if (key_event.type === "keyup")   keypress_manager.set_release(key_event.key);
-		player_manager.chassis_update_heading();
+		player_manager.chassis_update_movement();
 	}
 
 	function canvas_mouseevent(mouse_event: MouseEvent) {

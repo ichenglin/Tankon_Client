@@ -1,6 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { Socket as Engine } from "engine.io-client";
-import { player_client, projectile_manager } from "@/pages";
+import { player_client, player_manager, projectile_manager } from "@/pages";
+import { PlayerMovement } from "../player";
+import Vector2D from "../vector_2d";
 
 export default class SocketManager {
 
@@ -23,7 +25,11 @@ export default class SocketManager {
 			if (!join_status.success) return;
 			player_client.player_room = join_status.player_room;
 		});
-		//socket_client.on("player_move",       (coordinates) => console.log(coordinates));
+		this.socket_client.on("player_move",       (player_id: string, movement_data: PlayerMovement) => {
+            Object.setPrototypeOf(movement_data.movement_origin, Vector2D.prototype);
+            if (player_manager.player_get(player_id) === undefined) player_manager.player_add(player_id);
+            player_manager.player_get(player_id)?.chassis_update_movement(movement_data);
+        });
 		this.socket_client.on("player_projectile", (player_projectile) => projectile_manager.projectile_register(player_projectile));
     }
 
