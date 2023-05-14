@@ -1,16 +1,32 @@
-import { collision_manager, keypress_manager, socket_manager } from "@/pages";
+import { collision_manager, keypress_manager, projectile_manager, socket_manager } from "@/pages";
 import Player, { PlayerProfile } from "../player";
 import Vector2D from "../vector_2d";
 
 export default class PlayerManager {
 
-    private player_online: Map<string, Player>;
-
+    private player_online:     Map<string, Player>;
     private controller_player: Player;
+
+    // loop intervals
+    private turret_firing:     number | undefined;
 
     constructor() {
         this.player_online       = new Map<string, Player>();
         this.controller_player   = new Player({player_id: "", player_username: "You"});
+    }
+
+    public turret_firemode(turret_firemode: boolean) {
+        // stop the current interval no matter firing or not
+        if (this.turret_firing !== undefined) window.clearInterval(this.turret_firing);
+        this.turret_firing = undefined;
+        // set new interval if enabled
+        if (turret_firemode !== true) return;
+        this.turret_firing = window.setInterval(() => {
+            const turret_coordinates = this.controller_player.turret_get_coordinates();
+            projectile_manager.projectile_add(turret_coordinates.vector_duplicate().vector_offset(0, 0, -0.3, 0), 1000, 10)
+            projectile_manager.projectile_add(turret_coordinates, 1000, 10)
+            projectile_manager.projectile_add(turret_coordinates.vector_duplicate().vector_offset(0, 0, 0.3, 0), 1000, 10)
+        }, (this.controller_player.tank_get().turret_firerate*1000));
     }
 
     public turret_update_heading(mouse_event: MouseEvent) {

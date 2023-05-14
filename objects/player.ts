@@ -10,7 +10,7 @@ export default class Player {
     constructor(player_profile: PlayerProfile) {
         this.player_profile = player_profile;
         this.player_tank = {
-            chassis_velocity: 500, // pixels per second
+            chassis_velocity: 300, // pixels per second
             turret_firerate:  0.15 // shells per second
         };
         this.player_movement = {

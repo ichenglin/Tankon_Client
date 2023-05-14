@@ -62,7 +62,7 @@ const Home: NextPageLayout = () => {
 		new CollisionHitbox([
 			new Point2D(-200, 100),
 			new Point2D(-100, -300)
-		])])
+		])]);
 	}, []);
 
 	function canvas_rerender(rerender_timestamp: number) {
@@ -83,15 +83,6 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_point(new Point2D(-40, -40), 10);
 
 		collision_manager.hitbox_render();
-
-		const target = collision_manager.collision_get(player_manager.controller_get().chassis_get_coordinates())?.collision_coordinates;
-		if (target) {
-			canvas_context.setLineDash([5, 5]);
-			canvas_context.strokeStyle = "red";
-			context_manager.canvas_line(player_manager.controller_get().chassis_get_coordinates(), target);
-			canvas_context.setLineDash([]);
-			canvas_context.strokeStyle = "black";
-		}
 		/*let reflection_origin  = player_manager.turret_get_coordinates();
 		let reflection_maximum = 10;
 		while (reflection_maximum-- >= 0) {
@@ -149,8 +140,8 @@ const Home: NextPageLayout = () => {
 
 	function canvas_mouseevent(mouse_event: MouseEvent) {
 		if      (mouse_event.type === "mousemove") player_manager.turret_update_heading(mouse_event);
-		//else if (mouse_event.type === "mousedown") player_manager.turret_firemode(true);
-		//else if (mouse_event.type === "mouseup")   player_manager.turret_firemode(false);
+		else if (mouse_event.type === "mousedown") player_manager.turret_firemode(true);
+		else if (mouse_event.type === "mouseup")   player_manager.turret_firemode(false);
 	}
 
 	// check for unintended element render
