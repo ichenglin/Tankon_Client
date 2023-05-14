@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
-import { io } from "socket.io-client";
 import { NextPageLayout } from "./_app";
 import styles from "@/styles/pages/Home.module.css";
 
@@ -13,6 +12,7 @@ import Point2D from "@/objects/point_2d";
 import CollisionManager, { CollisionHitbox } from "@/objects/managers/collision_manager";
 import ProjectileManager from "@/objects/managers/projectile_manager";
 import SocketManager from "@/objects/managers/socket_manager";
+import Player from "@/objects/player";
 
 const font_sono = Sono({subsets: ["latin"]});
 
@@ -31,6 +31,8 @@ export const projectile_manager = new ProjectileManager();
 const Home: NextPageLayout = () => {
 
 	let rerender_previous: number | null = null;
+
+	const [leaderboard, set_leaderboard] = useState([] as Player[]);
 
 	useEffect(() => {
 		// assign canvas context to manager
@@ -121,10 +123,11 @@ const Home: NextPageLayout = () => {
 			const player_name   = player_object.profile_get().player_username;
 			context_manager.canvas_image("/tanks/chassis.png", player_object.chassis_get_coordinates(), 1);
 			context_manager.canvas_image("/tanks/turret.png", player_object.turret_get_coordinates(), 1);
-			context_manager.canvas_text(player_name, player_object.chassis_get_coordinates().vector_duplicate().vector_offset((-7 * player_name.length), -70, 0, 0), "Arial", 30);
+			context_manager.canvas_text(player_name, player_object.chassis_get_coordinates().vector_duplicate().vector_offset((-7 * player_name.length), -70, 0, 0), font_sono.style.fontFamily, 30);
 		}
 		// update player movement
 		window.requestAnimationFrame(canvas_rerender);
+		set_leaderboard([player_manager.controller_get(), ...player_manager.player_all()]);
 	}
 
 	function canvas_rescale() {
@@ -156,6 +159,23 @@ const Home: NextPageLayout = () => {
 	return (
 		<section className={styles.body}>
 			<canvas id="canvas" className={styles.canvas}/>
+			<table className={styles.leaderboard}>
+				<caption>Leaderboard</caption>
+				<tbody>
+					<tr>
+						<th>Username</th>
+						<th>Kills</th>
+						<th>Deaths</th>
+						<th>Latency</th>
+					</tr>
+					{leaderboard.map((player_object: any, player_index) => (<tr key={player_index}>
+						<td>{player_object.profile_get().player_username}</td>
+						<td>0</td>
+						<td>0</td>
+						<td>Unknown</td>
+					</tr>))}
+				</tbody>
+			</table>
 		</section>
 	);
 };

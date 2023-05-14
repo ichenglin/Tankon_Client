@@ -10,7 +10,7 @@ export default class PlayerManager {
 
     constructor() {
         this.player_online       = new Map<string, Player>();
-        this.controller_player   = new Player({player_id: "", player_username: ""});
+        this.controller_player   = new Player({player_id: "", player_username: "You"});
     }
 
     public turret_update_heading(mouse_event: MouseEvent) {
