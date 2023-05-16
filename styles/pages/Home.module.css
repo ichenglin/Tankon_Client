@@ -6,27 +6,3 @@
 .canvas {
     display: block;
 }
-
-.leaderboard {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-}
-
-.leaderboard > caption {
-    padding: 0px 10px;
-    margin: 2px;
-    margin-bottom: 0px;
-    background-color: rgba(255, 0, 0, 0.3);
-}
-
-.leaderboard > tbody > tr > th {
-    padding: 0px 10px;
-    background-color: rgba(255, 0, 0, 0.3);
-}
-
-.leaderboard > tbody > tr > td {
-    padding: 0px 10px;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.2);
-}
