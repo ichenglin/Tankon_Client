@@ -5,10 +5,13 @@ html, body {
     min-height: 100%;
 	overflow-x: hidden;
     user-select: none;
-    box-sizing: border-box;
 }
 
 main {
 	min-height: 100vh;
     height: 100vh;
+}
+
+* {
+    box-sizing: border-box;
 }

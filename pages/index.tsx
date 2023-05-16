@@ -15,6 +15,7 @@ import SocketManager from "@/objects/managers/socket_manager";
 import Player from "@/objects/player";
 
 import Leaderboard from "@/components/leaderboard";
+import Lobby from "@/components/lobby";
 
 const font_sono = Sono({subsets: ["latin"]});
 
@@ -153,6 +154,7 @@ const Home: NextPageLayout = () => {
 		<section className={styles.body}>
 			<canvas id="canvas" className={styles.canvas}/>
 			<Leaderboard leaderboard={leaderboard}/>
+			<Lobby/>
 		</section>
 	);
 };
