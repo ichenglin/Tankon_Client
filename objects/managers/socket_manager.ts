@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { Socket as Engine } from "engine.io-client";
 import { player_client, player_manager, projectile_manager } from "@/pages";
-import { PlayerMovement, PlayerProfile } from "../player";
+import { PlayerLatency, PlayerMovement, PlayerProfile } from "../player";
 import Vector2D from "../vector_2d";
 
 export default class SocketManager {
@@ -40,7 +40,16 @@ export default class SocketManager {
         this.socket_client.on("player_teleport", (player_coordinates: Vector2D) => {
             Object.setPrototypeOf(player_coordinates, Vector2D.prototype);
             player_manager.chassis_teleport(player_coordinates);
-        })
+        });
+        this.socket_client.on("server_leaderboard", (room_leaderboard: SocketRoomLeaderboard[]) => {
+            room_leaderboard.forEach(loop_leaderboard => {
+                const leaderboard_player = player_manager.player_get(loop_leaderboard.player_id);
+                leaderboard_player?.latency_set(loop_leaderboard.player_latency);
+            })
+        });
+        this.socket_client.on("server_ping", () => {
+            this.socket_client.emit("client_pong", Date.now());
+        });
     }
 
     public client_connect(player_username: string): void {
@@ -63,4 +72,11 @@ export default class SocketManager {
         return this.socket_engine;
     }
 
+}
+
+export interface SocketRoomLeaderboard {
+    player_id:      string,
+    player_kills:   number,
+    player_deaths:  number,
+    player_latency: PlayerLatency
 }

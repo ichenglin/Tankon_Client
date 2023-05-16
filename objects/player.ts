@@ -5,6 +5,7 @@ export default class Player {
     private player_profile:     PlayerProfile;
     private player_tank:        PlayerTank;
     private player_movement:    PlayerMovement;
+    private player_latency:     PlayerLatency;
     private turret_direction:   number;
 
     constructor(player_profile: PlayerProfile) {
@@ -19,6 +20,10 @@ export default class Player {
             movement_lifespan:  null,
             movement_timestamp: Date.now()
         };
+        this.player_latency = {
+            client_send:    0,
+            client_receive: 0
+        }
         this.turret_direction = 0;
     }
 
@@ -58,6 +63,14 @@ export default class Player {
     public movement_get(): PlayerMovement {
         return this.player_movement;
     }
+
+    public latency_set(player_latency: PlayerLatency): void {
+        this.player_latency = player_latency;
+    }
+
+    public latency_get(): PlayerLatency {
+        return this.player_latency;
+    }
 }
 
 export interface PlayerProfile {
@@ -75,4 +88,9 @@ export interface PlayerMovement {
     movement_proceed:   boolean,
     movement_lifespan:  number | null,
     movement_timestamp: number
+}
+
+export interface PlayerLatency {
+    client_send:    number, // client to server
+    client_receive: number  // server to client
 }
