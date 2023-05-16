@@ -14,28 +14,62 @@
     font-family: "JetBrains Mono", monospace;
 }
 
-.lobby > h1 {
+/* fade animation */
+
+.lobby[value-visibility="false"] {
+    animation: 1s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards lobby_fade;
+}
+
+.lobby * {
+    transition: 1s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+}
+
+.lobby[value-visibility="false"] > .logo {
+    transform: translateY(-100vh);
+}
+
+.lobby[value-visibility="false"] > .connect > input[type="text"] {
+    transform: translateX(-100vw);
+}
+
+.lobby[value-visibility="false"] > .connect > input[type="button"] {
+    transform: translateX(100vw);
+}
+
+@keyframes lobby_fade {
+    99%  {opacity: 0;}
+    100% {visibility: hidden;}
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo > h1 {
     display: flex;
     align-items: flex-end;
 }
 
-.lobby > h1 > svg {
+.logo > h1 > svg {
     margin-right: 30px;
 }
 
-.lobby > h1, .lobby > h1 > span {
+.logo > h1, .logo > h1 > span {
     margin: 0px;
     font-size: 92px;
     line-height: 92px;
 }
 
-.lobby > h1 > span:nth-child(odd) {
-    border-bottom: 8px solid #E06C75;
+.logo > h1 > span:nth-child(odd) {
+    border-bottom: 10px solid #E06C75;
     color: #FFFFFF;
 }
 
-.lobby > h1 > span:nth-child(even) {
-    border-bottom: 8px solid #E06C75;
+.logo > h1 > span:nth-child(even) {
+    border-bottom: 10px solid #E06C75;
     color: #E06C75;
 }
 
@@ -54,9 +88,10 @@
 .connect > input[type="text"] {
     width: 250px;
     height: 40px;
-    font-size: 30px;
-    line-height: 30px;
+    font-size: 25px;
+    line-height: 25px;
     border: 4px solid #000000;
+    outline: none;
 }
 
 .connect > input[type="button"] {

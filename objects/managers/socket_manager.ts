@@ -10,7 +10,7 @@ export default class SocketManager {
     private socket_engine: Engine;
 
     constructor(socket_url: string) {
-        const socket_url_parsed = new URL(process.env.server_url as string);
+        const socket_url_parsed = new URL(socket_url);
         this.socket_client      = io(socket_url_parsed.origin, {path: socket_url_parsed.pathname});
         this.socket_engine      = this.socket_client.io.engine;
         // engine events
@@ -21,11 +21,6 @@ export default class SocketManager {
     }
 
     private client_events() {
-        // register self
-        this.socket_client.emit("room_join", "Anonymous Tank", null, (join_status: any) => {
-			if (!join_status.success) return;
-			player_client.player_room = join_status.player_room;
-		});
         // handle events
         this.socket_client.on("player_join", (player_profile: PlayerProfile) => {
             player_manager.player_add(player_profile);
@@ -40,6 +35,13 @@ export default class SocketManager {
             player_manager.player_get(player_id)?.chassis_update_movement(movement_data);
         });
 		this.socket_client.on("player_projectile", (player_projectile) => projectile_manager.projectile_register(player_projectile));
+    }
+
+    public client_connect(player_username: string): void {
+        this.socket_client.emit("room_join", player_username, null, (join_status: any) => {
+			if (!join_status.success) return;
+			player_client.player_room = join_status.player_room;
+		});
     }
 
     public client_get(): Socket {

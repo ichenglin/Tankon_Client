@@ -19,7 +19,8 @@ export default class ProjectileManager {
             projectile_object.projectile_trajectory.projectile_origin,
             projectile_object.projectile_velocity,
             projectile_object.projectile_trajectory.projectile_rebounces,
-            projectile_object.projectile_birthday
+            
+            Date.now()
         ));
     }
 

@@ -40,9 +40,9 @@ const Home: NextPageLayout = () => {
 	useEffect(() => {
 		// assign canvas context to manager
 		const canvas_element = document.getElementById("canvas") as HTMLCanvasElement;
-		const canvas_context = canvas_element.getContext("2d") as CanvasRenderingContext2D;
+		const canvas_context = canvas_element.getContext("2d")   as CanvasRenderingContext2D;
 		context_manager.canvas_element(canvas_context);
-		// register events
+		// register window events
 		canvas_rescale();
 		window.addEventListener("resize",    canvas_rescale);
 		window.addEventListener("keydown",   canvas_keyevent);
@@ -51,6 +51,9 @@ const Home: NextPageLayout = () => {
 		window.addEventListener("mousedown", canvas_mouseevent);
 		window.addEventListener("mouseup",   canvas_mouseevent);
 		window.requestAnimationFrame(canvas_rerender);
+		// register lobby events
+		const lobby_play = document.getElementById("play") as HTMLButtonElement;
+		lobby_play.addEventListener("click", lobby_connect);
 		(window as any).player_data = player_client;
 		collision_manager.hitbox_set([new CollisionHitbox([
 			new Point2D(100, 200),
@@ -145,6 +148,14 @@ const Home: NextPageLayout = () => {
 		if      (mouse_event.type === "mousemove") player_manager.turret_update_heading(mouse_event);
 		else if (mouse_event.type === "mousedown") player_manager.turret_firemode(true);
 		else if (mouse_event.type === "mouseup")   player_manager.turret_firemode(false);
+	}
+
+	function lobby_connect(press_event: MouseEvent) {
+		const lobby_window   = document.getElementById("lobby")    as HTMLElement;
+		const lobby_username = document.getElementById("username") as HTMLInputElement;
+		const player_username = (lobby_username.value.length > 0 ? lobby_username.value : "Anonymous");
+		socket_manager.client_connect(player_username);
+		lobby_window.setAttribute("value-visibility", "false");
 	}
 
 	// check for unintended element render
