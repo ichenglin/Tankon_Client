@@ -114,14 +114,7 @@ const Home: NextPageLayout = () => {
 		projectile_manager.projectile_render();
 		context_manager.canvas_image("/tanks/turret.png", player_manager.controller_get().turret_get_coordinates(), 1);
 		// render enemies
-		const player_online = player_manager.player_all();
-		for (let player_index = 0; player_index < player_online.length; player_index++) {
-			const player_object = player_online[player_index];
-			const player_name   = player_object.profile_get().player_username;
-			context_manager.canvas_image("/tanks/chassis.png", player_object.chassis_get_coordinates(), 1);
-			context_manager.canvas_image("/tanks/turret.png", player_object.turret_get_coordinates(), 1);
-			context_manager.canvas_text(player_name, player_object.chassis_get_coordinates().vector_duplicate().vector_offset((-7 * player_name.length), -70, 0, 0), font_sono.style.fontFamily, 30);
-		}
+		player_manager.player_render();
 		// update player movement
 		window.requestAnimationFrame(canvas_rerender);
 		set_leaderboard([player_manager.controller_get(), ...player_manager.player_all()]);

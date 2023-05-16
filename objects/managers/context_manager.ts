@@ -48,14 +48,17 @@ export default class ContextManager {
         this.canvas_context.stroke();
     }
 
-    public canvas_text(text_content: string, text_coordinates: Point2D, text_font: string, text_size: number): void {
+    public canvas_text(text_content: string, text_coordinates: Point2D, text_font: string, text_size: number, text_align: CanvasTextAlign): void {
         // only draw when context is set
         if (this.canvas_context === null) return;
         // draw
         const text_coordinates_relative = this.canvas_coordinates_relative(text_coordinates);
-        const text_size_relative = this.canvas_scale_relative(text_size);
-        this.canvas_context.font  = `${text_size_relative}px ${text_font}`;
+        const text_size_relative        = this.canvas_scale_relative(text_size);
+        this.canvas_context.font        = `${text_size_relative}px ${text_font}`;
+        this.canvas_context.textAlign   = text_align;
 		this.canvas_context.fillText(text_content, text_coordinates_relative.point_get_x(), text_coordinates_relative.point_get_y());
+        // reset
+        this.canvas_context.textAlign   = "left";
     }
 
     public canvas_image(image_source: string, image_coordinates: Vector2D, image_scale: number = 1): void {

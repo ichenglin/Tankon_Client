@@ -1,6 +1,10 @@
-import { collision_manager, keypress_manager, projectile_manager, socket_manager } from "@/pages";
+import { collision_manager, context_manager, keypress_manager, projectile_manager, socket_manager } from "@/pages";
 import Player, { PlayerProfile } from "../player";
 import Vector2D from "../vector_2d";
+
+import { Sono } from "next/font/google";
+
+const font_sono = Sono({subsets: ["latin"]});
 
 export default class PlayerManager {
 
@@ -82,6 +86,17 @@ export default class PlayerManager {
 
     public player_all(): Player[] {
         return Array.from(this.player_online.values());
+    }
+
+    public player_render(): void {
+        const player_online = this.player_all();
+		for (let player_index = 0; player_index < player_online.length; player_index++) {
+			const player_object = player_online[player_index];
+			const player_name   = player_object.profile_get().player_username;
+			context_manager.canvas_image("/tanks/chassis.png", player_object.chassis_get_coordinates(), 1);
+			context_manager.canvas_image("/tanks/turret.png", player_object.turret_get_coordinates(), 1);
+			context_manager.canvas_text(player_name, player_object.chassis_get_coordinates().vector_duplicate().vector_offset(0, -70, 0, 0), font_sono.style.fontFamily, 30, "center");
+		}
     }
 
 }

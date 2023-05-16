@@ -22,7 +22,7 @@ const Lobby: NextPageLayout = () => {
                 <h3>A Multiplayer Tank Game</h3>
             </div>
             <div className={styles.connect}>
-                <input type="text"   id="username" name="username" spellCheck="false" />
+                <input type="text"   id="username" name="username" spellCheck="false" maxLength={16} />
                 <input type="button" id="play"     value="Play" className={font_audiowide.className} />
             </div>
 		</section>
