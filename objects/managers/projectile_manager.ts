@@ -7,8 +7,8 @@ export default class ProjectileManager {
 
     constructor() {}
 
-    public projectile_add(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number): void {
-        const projectile_new = new Projectile(projectile_origin, projectile_velocity, projectile_rebounces);
+    public projectile_add(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number, projectile_owner_id: string): void {
+        const projectile_new = new Projectile(projectile_origin, projectile_velocity, projectile_rebounces, projectile_owner_id);
         this.projectile_active.push(projectile_new);
         socket_manager.client_get().emit("player_projectile", projectile_new);
     }
@@ -19,7 +19,7 @@ export default class ProjectileManager {
             projectile_object.projectile_trajectory.projectile_origin,
             projectile_object.projectile_velocity,
             projectile_object.projectile_trajectory.projectile_rebounces,
-            
+            projectile_object.projectile_owner_id,
             Date.now()
         ));
     }
@@ -42,11 +42,13 @@ export class Projectile {
 
     private projectile_trajectory: ProjectileTrajectory;
     private projectile_velocity:   number;
+    private projectile_owner_id:   string;
     private projectile_birthday:   number;
 
-    constructor(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number, projectile_birthday: number = Date.now()) {
+    constructor(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number, projectile_owner_id: string, projectile_birthday: number = Date.now()) {
         this.projectile_trajectory = new ProjectileTrajectory(projectile_origin, projectile_rebounces);
         this.projectile_velocity   = projectile_velocity;
+        this.projectile_owner_id   = projectile_owner_id;
         this.projectile_birthday   = projectile_birthday;
     }
 

@@ -85,6 +85,10 @@
     display: flex;
 }
 
+.lobby:not([value-visibility="false"]) > .connect > input {
+    transition: none;
+}
+
 .connect > input[type="text"] {
     width: 250px;
     height: 40px;

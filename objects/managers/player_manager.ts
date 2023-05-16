@@ -27,7 +27,7 @@ export default class PlayerManager {
         if (turret_firemode !== true) return;
         this.turret_firing = window.setInterval(() => {
             const turret_coordinates = this.controller_player.turret_get_coordinates();
-            projectile_manager.projectile_add(turret_coordinates, 1000, 10);
+            projectile_manager.projectile_add(turret_coordinates, 1000, 10, this.controller_player.profile_get().player_id);
         }, (this.controller_player.tank_get().turret_firerate*1000));
     }
 
