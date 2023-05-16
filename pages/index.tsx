@@ -114,6 +114,7 @@ const Home: NextPageLayout = () => {
 		projectile_manager.projectile_render();
 		context_manager.canvas_image("/tanks/turret.png", player_manager.controller_get().turret_get_coordinates(), 1);
 		// render enemies
+		projectile_manager.projectile_victims();
 		player_manager.player_render();
 		// update player movement
 		window.requestAnimationFrame(canvas_rerender);

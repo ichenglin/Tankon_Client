@@ -1,4 +1,5 @@
-import { collision_manager, context_manager, socket_manager } from "@/pages";
+import { collision_manager, context_manager, player_manager, socket_manager } from "@/pages";
+import Player from "../player";
 import Vector2D from "../vector_2d";
 
 export default class ProjectileManager {
@@ -22,6 +23,22 @@ export default class ProjectileManager {
             projectile_object.projectile_owner_id,
             Date.now()
         ));
+    }
+
+    public projectile_victims(): void {
+        const controller_id = player_manager.controller_get().profile_get().player_id;
+        const controller_victims: Player[] = [];
+        for (let projectile_index = 0; projectile_index < this.projectile_active.length; projectile_index++) {
+            const projectile_object = this.projectile_active[projectile_index];
+            if (projectile_object.owner_get() !== controller_id) continue;
+            const projectile_coordinates = projectile_object.coordinates_get();
+            player_manager.player_all().forEach(loop_player => {
+                if (loop_player.chassis_get_coordinates().point_distance(projectile_coordinates) > 40) return;
+                if (controller_victims.includes(loop_player)) return;
+                controller_victims.push(loop_player);
+            });
+        }
+        if (controller_victims.length > 0) socket_manager.client_kill(controller_victims.map(loop_victim => loop_victim.profile_get().player_id));
     }
 
     public projectile_render(): void {
@@ -56,6 +73,10 @@ export class Projectile {
         const projectile_lifetime = (Date.now() - this.projectile_birthday) / 1E3;
         const trajectory_distance = this.projectile_velocity * projectile_lifetime;
         return this.projectile_trajectory.coordinates_get(trajectory_distance);
+    }
+
+    public owner_get(): string {
+        return this.projectile_owner_id;
     }
 
     public projectile_alive(): boolean {

@@ -1,5 +1,5 @@
 import { collision_manager, context_manager, keypress_manager, projectile_manager, socket_manager } from "@/pages";
-import Player, { PlayerProfile } from "../player";
+import Player, { PlayerMovement, PlayerProfile } from "../player";
 import Vector2D from "../vector_2d";
 
 import { Sono } from "next/font/google";
@@ -68,6 +68,17 @@ export default class PlayerManager {
         socket_manager.client_get().emit("player_move", movement_data);
     }
 
+    public chassis_teleport(chassis_coordinates: Vector2D) {
+        const movement_data: PlayerMovement = {
+            movement_origin:    chassis_coordinates,
+            movement_proceed:   false,
+            movement_lifespan:  null,
+            movement_timestamp: Date.now()
+        }
+        this.controller_player.chassis_update_movement(movement_data);
+        this.chassis_update_movement();
+    }
+
     public controller_get(): Player {
         return this.controller_player;
     }
@@ -81,6 +92,7 @@ export default class PlayerManager {
     }
 
     public player_get(player_id: string): Player | undefined {
+        if (player_id === this.controller_player.profile_get().player_id) return this.controller_player;
         return this.player_online.get(player_id);
     }
 

@@ -47,8 +47,16 @@ export default class Player {
         return this.player_tank;
     }
 
+    public profile_set(player_profile: PlayerProfile): void {
+        this.player_profile = player_profile;
+    }
+
     public profile_get(): PlayerProfile {
         return this.player_profile;
+    }
+
+    public movement_get(): PlayerMovement {
+        return this.player_movement;
     }
 }
 
