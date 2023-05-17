@@ -118,9 +118,9 @@ const Home: NextPageLayout = () => {
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Server: ${player_client.player_room}   Players: ${player_manager.player_all().length + 1}/10   Coordinates: (${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
 		// player and projectiles
-		context_manager.canvas_image("/tanks/chassis.png", player_manager.controller_get().chassis_get_coordinates(), 1);
+		player_manager.controller_get().render_chassis();
 		projectile_manager.projectile_render();
-		context_manager.canvas_image("/tanks/turret.png", player_manager.controller_get().turret_get_coordinates(), 1);
+		player_manager.controller_get().render_turret();
 		// render enemies
 		projectile_manager.projectile_victims();
 		player_manager.player_render();

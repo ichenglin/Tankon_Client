@@ -147,6 +147,48 @@
             ]
         },
         {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of blue spawnpoint",
+            "hitbox_anchor": [
+                {"x": 2600, "y": 400},
+                {"x": 2500, "y": 400}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of blue spawnpoint",
+            "hitbox_anchor": [
+                {"x": 2300, "y": 400},
+                {"x": 2200, "y": 400},
+                {"x": 2200, "y": 300}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of blue spawnpoint",
+            "hitbox_anchor": [
+                {"x": 2200, "y": 100},
+                {"x": 2200, "y": -100}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of blue spawnpoint",
+            "hitbox_anchor": [
+                {"x": 2300, "y": -400},
+                {"x": 2200, "y": -400},
+                {"x": 2200, "y": -300}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of blue spawnpoint",
+            "hitbox_anchor": [
+                {"x": 2600, "y": -400},
+                {"x": 2500, "y": -400}
+            ]
+        },
+        {
             "hitbox_type": "wall",
             "hitbox_description": "the wall",
             "hitbox_anchor": [

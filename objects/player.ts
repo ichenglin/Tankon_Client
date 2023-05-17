@@ -1,3 +1,4 @@
+import { context_manager } from "@/pages";
 import Vector2D from "./vector_2d";
 
 export default class Player {
@@ -70,6 +71,16 @@ export default class Player {
 
     public latency_get(): PlayerLatency {
         return this.player_latency;
+    }
+
+    public render_chassis(): void {
+        const player_tank_color = (this.player_data.player_team === PlayerTeam.TEAM_BLUE) ? "blue" : "red";
+        context_manager.canvas_image(`/tanks/chassis_${player_tank_color}.png`, this.chassis_get_coordinates(), 1);
+    }
+
+    public render_turret(): void {
+        const player_tank_color = (this.player_data.player_team === PlayerTeam.TEAM_BLUE) ? "blue" : "red";
+        context_manager.canvas_image(`/tanks/turret_${player_tank_color}.png`, this.turret_get_coordinates(), 1);
     }
 }
 

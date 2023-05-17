@@ -34,7 +34,7 @@ export default class PlayerManager {
         if (turret_firemode !== true) return;
         this.turret_firing = window.setInterval(() => {
             const turret_coordinates = this.controller_player.turret_get_coordinates();
-            projectile_manager.projectile_add(turret_coordinates, 1000, 3, this.controller_player.data_get().player_id);
+            projectile_manager.projectile_add(turret_coordinates, 1000, 3);
         }, (this.controller_player.tank_get().turret_firerate*1000));
     }
 
@@ -112,8 +112,8 @@ export default class PlayerManager {
 		for (let player_index = 0; player_index < player_online.length; player_index++) {
 			const player_object = player_online[player_index];
 			const player_name   = player_object.data_get().player_username;
-			context_manager.canvas_image("/tanks/chassis.png", player_object.chassis_get_coordinates(), 1);
-			context_manager.canvas_image("/tanks/turret.png", player_object.turret_get_coordinates(), 1);
+			player_object.render_chassis();
+            player_object.render_turret();
 			context_manager.canvas_text(player_name, player_object.chassis_get_coordinates().vector_duplicate().vector_offset(0, -70, 0, 0), font_sono.style.fontFamily, 30, "center");
 		}
     }

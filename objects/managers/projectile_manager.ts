@@ -1,5 +1,5 @@
 import { collision_manager, context_manager, player_manager, socket_manager } from "@/pages";
-import Player from "../player";
+import Player, { PlayerTeam } from "../player";
 import Vector2D from "../vector_2d";
 
 export default class ProjectileManager {
@@ -8,8 +8,9 @@ export default class ProjectileManager {
 
     constructor() {}
 
-    public projectile_add(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number, projectile_owner_id: string): void {
-        const projectile_new = new Projectile(projectile_origin, projectile_velocity, projectile_rebounces, projectile_owner_id);
+    public projectile_add(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number): void {
+        const projectile_owner_data = player_manager.controller_get().data_get();
+        const projectile_new        = new Projectile(projectile_origin, projectile_velocity, projectile_rebounces, projectile_owner_data.player_id, projectile_owner_data.player_team);
         this.projectile_active.push(projectile_new);
         socket_manager.client_get().emit("player_projectile", projectile_new);
     }
@@ -21,20 +22,23 @@ export default class ProjectileManager {
             projectile_object.projectile_velocity,
             projectile_object.projectile_trajectory.projectile_rebounces,
             projectile_object.projectile_owner_id,
+            projectile_object.projectile_owner_team,
             Date.now()
         ));
     }
 
     public projectile_victims(): void {
-        const controller_id = player_manager.controller_get().data_get().player_id;
+        const controller_data = player_manager.controller_get().data_get();
         const controller_victims: Player[] = [];
         for (let projectile_index = 0; projectile_index < this.projectile_active.length; projectile_index++) {
             const projectile_object = this.projectile_active[projectile_index];
-            if (projectile_object.owner_get() !== controller_id) continue;
+            // only check on controller's projectiles
+            if (projectile_object.owner_get() !== controller_data.player_id) continue;
             const projectile_coordinates = projectile_object.coordinates_get();
             player_manager.player_all().forEach(loop_player => {
+                if (loop_player.data_get().player_team === controller_data.player_team)                return;
                 if (loop_player.chassis_get_coordinates().point_distance(projectile_coordinates) > 40) return;
-                if (controller_victims.includes(loop_player)) return;
+                if (controller_victims.includes(loop_player))                                          return;
                 controller_victims.push(loop_player);
             });
         }
@@ -45,7 +49,8 @@ export default class ProjectileManager {
         this.projectile_active = this.projectile_active.filter(loop_projectile => loop_projectile.projectile_alive());
         for (let projectile_index = 0; projectile_index < this.projectile_active.length; projectile_index++) {
             const projectile_object = this.projectile_active[projectile_index];
-            context_manager.canvas_image("/tanks/ammo_normal.png", projectile_object.coordinates_get());
+            const projectile_color  = (projectile_object.team_get() === PlayerTeam.TEAM_BLUE) ? "blue" : "red";
+            context_manager.canvas_image(`/tanks/projectile_${projectile_color}.png`, projectile_object.coordinates_get());
         }
     }
 
@@ -60,12 +65,14 @@ export class Projectile {
     private projectile_trajectory: ProjectileTrajectory;
     private projectile_velocity:   number;
     private projectile_owner_id:   string;
+    private projectile_owner_team: PlayerTeam;
     private projectile_birthday:   number;
 
-    constructor(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number, projectile_owner_id: string, projectile_birthday: number = Date.now()) {
+    constructor(projectile_origin: Vector2D, projectile_velocity: number, projectile_rebounces: number, projectile_owner_id: string, projectile_owner_team: PlayerTeam, projectile_birthday: number = Date.now()) {
         this.projectile_trajectory = new ProjectileTrajectory(projectile_origin, projectile_rebounces);
         this.projectile_velocity   = projectile_velocity;
         this.projectile_owner_id   = projectile_owner_id;
+        this.projectile_owner_team = projectile_owner_team;
         this.projectile_birthday   = projectile_birthday;
     }
 
@@ -77,6 +84,10 @@ export class Projectile {
 
     public owner_get(): string {
         return this.projectile_owner_id;
+    }
+
+    public team_get(): PlayerTeam {
+        return this.projectile_owner_team;
     }
 
     public projectile_alive(): boolean {
