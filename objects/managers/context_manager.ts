@@ -78,6 +78,13 @@ export default class ContextManager {
         this.canvas_context.restore();
     }
 
+    public canvas_preload(image_sources: string[]): void {
+        for (let image_index = 0; image_index < image_sources.length; image_index++) {
+            const image_preload = new Image();
+            image_preload.src = image_sources[image_index];
+        }
+    }
+
     public canvas_clear(): void {
         // only draw when context is set
         if (this.canvas_context === null) return;

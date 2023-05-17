@@ -20,6 +20,8 @@ import Lobby from "@/components/lobby";
 import map_default from "@/data/map_default.json";
 import Vector2D from "@/objects/vector_2d";
 
+import asset_preload from "@/data/asset_preload.json";
+
 const font_sono = Sono({subsets: ["latin"]});
 
 export const player_client      = {
@@ -59,21 +61,8 @@ const Home: NextPageLayout = () => {
 		const lobby_play = document.getElementById("play") as HTMLButtonElement;
 		lobby_play.addEventListener("click", lobby_connect);
 		(window as any).player_data = player_client;
-		/*collision_manager.hitbox_set([new CollisionHitbox([
-			new Point2D(100, 200),
-			new Point2D(-100, 200),
-			new Point2D(-150, 300),
-			new Point2D(100, 200)
-		]),
-		new CollisionHitbox([
-			new Point2D(200, 100),
-			new Point2D(200, 0)
-		]),
-		new CollisionHitbox([
-			new Point2D(-200, 100),
-			new Point2D(-100, -300)
-		])]);*/
 		collision_manager.hitbox_set(map_default.map_hitbox.map(loop_hitbox => new CollisionHitbox(loop_hitbox.hitbox_anchor.map(loop_anchor => new Point2D(loop_anchor.x, loop_anchor.y)))));
+		context_manager.canvas_preload(asset_preload);
 	}, []);
 
 	function canvas_rerender(rerender_timestamp: number) {
