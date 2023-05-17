@@ -117,13 +117,14 @@ const Home: NextPageLayout = () => {
 		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Server: ${player_client.player_room}   Players: ${player_manager.player_all().length + 1}/10   Coordinates: (${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
+		// render enemies
+		projectile_manager.projectile_victims();
+		player_manager.player_render();
 		// player and projectiles
 		player_manager.controller_get().render_chassis();
 		projectile_manager.projectile_render();
 		player_manager.controller_get().render_turret();
-		// render enemies
-		projectile_manager.projectile_victims();
-		player_manager.player_render();
+		player_manager.controller_get().render_shield();
 		// update player movement
 		window.requestAnimationFrame(canvas_rerender);
 		set_leaderboard([player_manager.controller_get(), ...player_manager.player_all()]);

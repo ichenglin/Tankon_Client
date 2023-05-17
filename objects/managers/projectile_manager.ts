@@ -37,6 +37,7 @@ export default class ProjectileManager {
             const projectile_coordinates = projectile_object.coordinates_get();
             player_manager.player_all().forEach(loop_player => {
                 if (loop_player.data_get().player_team === controller_data.player_team)                return;
+                if (loop_player.shield_alive())                                                        return;
                 if (loop_player.chassis_get_coordinates().point_distance(projectile_coordinates) > 40) return;
                 if (controller_victims.includes(loop_player))                                          return;
                 controller_victims.push(loop_player);

@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { Socket as Engine } from "engine.io-client";
 import { player_client, player_manager, projectile_manager } from "@/pages";
-import { PlayerLatency, PlayerMovement, PlayerData } from "../player";
+import { PlayerLatency, PlayerMovement, PlayerData, PlayerShield } from "../player";
 import Vector2D from "../vector_2d";
 
 export default class SocketManager {
@@ -47,6 +47,10 @@ export default class SocketManager {
                 leaderboard_player?.data_set(loop_leaderboard);
             });
             console.log(player_data);
+        });
+        this.socket_client.on("player_shield", (player_id: string, player_shield: PlayerShield) => {
+            const player_object = player_manager.player_get(player_id);
+            player_object?.shield_set(player_shield);
         });
         this.socket_client.on("server_ping", () => {
             this.socket_client.emit("client_pong", Date.now());

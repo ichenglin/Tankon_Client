@@ -114,6 +114,7 @@ export default class PlayerManager {
 			const player_name   = player_object.data_get().player_username;
 			player_object.render_chassis();
             player_object.render_turret();
+            player_object.render_shield();
 			context_manager.canvas_text(player_name, player_object.chassis_get_coordinates().vector_duplicate().vector_offset(0, -70, 0, 0), font_sono.style.fontFamily, 30, "center");
 		}
     }

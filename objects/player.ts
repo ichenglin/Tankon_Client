@@ -5,6 +5,7 @@ export default class Player {
 
     private player_data:        PlayerData;
     private player_tank:        PlayerTank;
+    private player_shield:      PlayerShield;
     private player_movement:    PlayerMovement;
     private turret_direction:   number;
 
@@ -13,6 +14,10 @@ export default class Player {
         this.player_tank = {
             chassis_velocity: 300, // pixels per second
             turret_firerate:  0.15 // shells per second
+        };
+        this.player_shield = {
+            shield_timestamp: Date.now(),
+            shield_lifespan:  0
         };
         this.player_movement = {
             movement_origin:    new Vector2D(0, 0, 0, 0),
@@ -56,6 +61,19 @@ export default class Player {
         return this.player_data;
     }
 
+    public shield_set(player_shield: PlayerShield): void {
+        this.player_shield = player_shield;
+    }
+
+    public shield_get(): PlayerShield {
+        return this.player_shield;
+    }
+
+    public shield_alive(): boolean {
+        const shield_age = Date.now() - this.player_shield.shield_timestamp;
+        return (shield_age < this.player_shield.shield_lifespan);
+    }
+
     public movement_get(): PlayerMovement {
         return this.player_movement;
     }
@@ -68,6 +86,13 @@ export default class Player {
     public render_turret(): void {
         const player_tank_color = (this.player_data.player_team === PlayerTeam.TEAM_BLUE) ? "blue" : "red";
         context_manager.canvas_image(`/tanks/turret_${player_tank_color}.png`, this.turret_get_coordinates(), 1);
+    }
+
+    public render_shield(): void {
+        const shield_age = Date.now() - this.player_shield.shield_timestamp;
+        if (shield_age > this.player_shield.shield_lifespan) return;
+        const shield_size = 0.2 + Math.pow(shield_age / this.player_shield.shield_lifespan, 0.4) * 0.1;
+        context_manager.canvas_image(`/asset/shield.png`, this.chassis_get_coordinates(), shield_size);
     }
 }
 
@@ -101,4 +126,9 @@ export enum PlayerTeam {
     TEAM_RED,
     TEAM_BLUE,
     TEAM_LOBBY
+}
+
+export interface PlayerShield {
+    shield_timestamp: number,
+    shield_lifespan:  number
 }
