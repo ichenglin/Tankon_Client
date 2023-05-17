@@ -26,7 +26,7 @@ export default class ProjectileManager {
     }
 
     public projectile_victims(): void {
-        const controller_id = player_manager.controller_get().profile_get().player_id;
+        const controller_id = player_manager.controller_get().data_get().player_id;
         const controller_victims: Player[] = [];
         for (let projectile_index = 0; projectile_index < this.projectile_active.length; projectile_index++) {
             const projectile_object = this.projectile_active[projectile_index];
@@ -38,7 +38,7 @@ export default class ProjectileManager {
                 controller_victims.push(loop_player);
             });
         }
-        if (controller_victims.length > 0) socket_manager.client_kill(controller_victims.map(loop_victim => loop_victim.profile_get().player_id));
+        if (controller_victims.length > 0) socket_manager.client_kill(controller_victims.map(loop_victim => loop_victim.data_get().player_id));
     }
 
     public projectile_render(): void {

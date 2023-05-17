@@ -1,5 +1,5 @@
 import { collision_manager, context_manager, keypress_manager, projectile_manager, socket_manager } from "@/pages";
-import Player, { PlayerMovement, PlayerProfile } from "../player";
+import Player, { PlayerMovement, PlayerData, PlayerTeam } from "../player";
 import Vector2D from "../vector_2d";
 
 import { Sono } from "next/font/google";
@@ -16,7 +16,14 @@ export default class PlayerManager {
 
     constructor() {
         this.player_online       = new Map<string, Player>();
-        this.controller_player   = new Player({player_id: "", player_username: "You"});
+        this.controller_player   = new Player({
+            player_id:       "",
+            player_username: "Unknown",
+            player_team:     PlayerTeam.TEAM_LOBBY,
+            player_kills:    0,
+            player_deaths:   0,
+            player_latency:  {client_send: 0, client_receive: 0}
+        });
     }
 
     public turret_firemode(turret_firemode: boolean) {
@@ -27,7 +34,7 @@ export default class PlayerManager {
         if (turret_firemode !== true) return;
         this.turret_firing = window.setInterval(() => {
             const turret_coordinates = this.controller_player.turret_get_coordinates();
-            projectile_manager.projectile_add(turret_coordinates, 1000, 3, this.controller_player.profile_get().player_id);
+            projectile_manager.projectile_add(turret_coordinates, 1000, 3, this.controller_player.data_get().player_id);
         }, (this.controller_player.tank_get().turret_firerate*1000));
     }
 
@@ -83,8 +90,8 @@ export default class PlayerManager {
         return this.controller_player;
     }
 
-    public player_add(player_profile: PlayerProfile): void {
-        this.player_online.set(player_profile.player_id, new Player(player_profile));
+    public player_add(player_data: PlayerData): void {
+        this.player_online.set(player_data.player_id, new Player(player_data));
     }
 
     public player_remove(player_id: string): void {
@@ -92,7 +99,7 @@ export default class PlayerManager {
     }
 
     public player_get(player_id: string): Player | undefined {
-        if (player_id === this.controller_player.profile_get().player_id) return this.controller_player;
+        if (player_id === this.controller_player.data_get().player_id) return this.controller_player;
         return this.player_online.get(player_id);
     }
 
@@ -104,7 +111,7 @@ export default class PlayerManager {
         const player_online = this.player_all();
 		for (let player_index = 0; player_index < player_online.length; player_index++) {
 			const player_object = player_online[player_index];
-			const player_name   = player_object.profile_get().player_username;
+			const player_name   = player_object.data_get().player_username;
 			context_manager.canvas_image("/tanks/chassis.png", player_object.chassis_get_coordinates(), 1);
 			context_manager.canvas_image("/tanks/turret.png", player_object.turret_get_coordinates(), 1);
 			context_manager.canvas_text(player_name, player_object.chassis_get_coordinates().vector_duplicate().vector_offset(0, -70, 0, 0), font_sono.style.fontFamily, 30, "center");

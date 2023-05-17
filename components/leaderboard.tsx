@@ -15,12 +15,12 @@ const Leaderboard: NextPageLayout<{leaderboard: Player[]}> = (props) => {
 					<th>Latency</th>
 				</tr>
 				{props.leaderboard.map((player_object, player_index) => {
-					const player_latency = player_object.latency_get();
+					const player_data = player_object.data_get();
 					return <tr key={player_index}>
-						<td>{player_object.profile_get().player_username}</td>
+						<td data-team={player_data.player_team}>{player_data.player_username}</td>
 						<td>0</td>
 						<td>0</td>
-						<td>{`${player_latency.client_send + player_latency.client_receive}ms`}</td>
+						<td>{`${player_data.player_latency.client_send + player_data.player_latency.client_receive}ms`}</td>
 					</tr>;
 				})}
 			</tbody>

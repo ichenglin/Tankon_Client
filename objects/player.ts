@@ -2,14 +2,14 @@ import Vector2D from "./vector_2d";
 
 export default class Player {
 
-    private player_profile:     PlayerProfile;
+    private player_data:        PlayerData;
     private player_tank:        PlayerTank;
     private player_movement:    PlayerMovement;
     private player_latency:     PlayerLatency;
     private turret_direction:   number;
 
-    constructor(player_profile: PlayerProfile) {
-        this.player_profile = player_profile;
+    constructor(player_data: PlayerData) {
+        this.player_data = player_data;
         this.player_tank = {
             chassis_velocity: 300, // pixels per second
             turret_firerate:  0.15 // shells per second
@@ -52,12 +52,12 @@ export default class Player {
         return this.player_tank;
     }
 
-    public profile_set(player_profile: PlayerProfile): void {
-        this.player_profile = player_profile;
+    public data_set(player_data: PlayerData): void {
+        this.player_data = player_data;
     }
 
-    public profile_get(): PlayerProfile {
-        return this.player_profile;
+    public data_get(): PlayerData {
+        return this.player_data;
     }
 
     public movement_get(): PlayerMovement {
@@ -73,9 +73,13 @@ export default class Player {
     }
 }
 
-export interface PlayerProfile {
+export interface PlayerData {
     player_id:       string,
-    player_username: string
+    player_username: string,
+    player_team:     PlayerTeam,
+    player_kills:    number,
+    player_deaths:   number,
+    player_latency:  PlayerLatency
 }
 
 export interface PlayerTank {
@@ -93,4 +97,10 @@ export interface PlayerMovement {
 export interface PlayerLatency {
     client_send:    number, // client to server
     client_receive: number  // server to client
+}
+
+export enum PlayerTeam {
+    TEAM_RED,
+    TEAM_BLUE,
+    TEAM_LOBBY
 }
