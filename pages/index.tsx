@@ -21,6 +21,7 @@ import map_default from "@/data/map_default.json";
 import Vector2D from "@/objects/vector_2d";
 
 import asset_preload from "@/data/asset_preload.json";
+import Scoreboard, { RoomScoreboard, RoomStatus } from "@/components/scoreboard";
 
 const font_sono = Sono({subsets: ["latin"]});
 
@@ -42,6 +43,7 @@ const Home: NextPageLayout = () => {
 	let rerender_previous: number | null = null;
 
 	const [leaderboard, set_leaderboard] = useState([] as Player[]);
+	const [scoreboard, set_scoreboard] = useState({score_red: 0, score_blue: 0, round_status: RoomStatus.INTERMISSION, round_lifetime: 0} as RoomScoreboard);
 
 	useEffect(() => {
 		// assign canvas context to manager
@@ -63,6 +65,10 @@ const Home: NextPageLayout = () => {
 		(window as any).player_data = player_client;
 		collision_manager.hitbox_set(map_default.map_hitbox.map(loop_hitbox => new CollisionHitbox(loop_hitbox.hitbox_anchor.map(loop_anchor => new Point2D(loop_anchor.x, loop_anchor.y)))));
 		context_manager.canvas_preload(asset_preload);
+		setInterval(() => {
+			set_leaderboard([player_manager.controller_get(), ...player_manager.player_all()]);
+			set_scoreboard(socket_manager.scoreboard_get());
+		}, 100);
 	}, []);
 
 	function canvas_rerender(rerender_timestamp: number) {
@@ -116,7 +122,6 @@ const Home: NextPageLayout = () => {
 		player_manager.controller_get().render_shield();
 		// update player movement
 		window.requestAnimationFrame(canvas_rerender);
-		set_leaderboard([player_manager.controller_get(), ...player_manager.player_all()]);
 	}
 
 	function canvas_rescale() {
@@ -157,6 +162,7 @@ const Home: NextPageLayout = () => {
 		<section className={styles.body}>
 			<canvas id="canvas" className={styles.canvas}/>
 			<Leaderboard leaderboard={leaderboard}/>
+			<Scoreboard  scoreboard={scoreboard}/>
 			<Lobby/>
 		</section>
 	);

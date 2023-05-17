@@ -1,0 +1,57 @@
+.scoreboard {
+    width: 100vw;
+    position: fixed;
+    top: 100px;
+    left: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.round {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.score {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.score > p {
+    font-size: 25px;
+    line-height: 25px;
+    color: #FFFFFF;
+}
+
+.score_red {
+    background-color: rgba(255, 0, 0, 0.3);
+}
+
+.score_blue {
+    background-color: rgba(0, 0, 255, 0.3);
+}
+
+.status {
+    width: 200px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+.status > p {
+    margin: 3px;
+    padding: 0px;
+    font-size: 15px;
+    line-height: 15px;
+    color: #FFFFFF;
+}

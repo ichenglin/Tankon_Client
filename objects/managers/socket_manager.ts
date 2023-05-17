@@ -1,18 +1,28 @@
 import { io, Socket } from "socket.io-client";
 import { Socket as Engine } from "engine.io-client";
 import { player_client, player_manager, projectile_manager } from "@/pages";
-import { PlayerLatency, PlayerMovement, PlayerData, PlayerShield } from "../player";
+import { PlayerMovement, PlayerData, PlayerShield } from "../player";
 import Vector2D from "../vector_2d";
+import { RoomData, RoomScoreboard, RoomStatus } from "@/components/scoreboard";
 
 export default class SocketManager {
 
     private socket_client: Socket;
     private socket_engine: Engine;
 
+    private room_data:     RoomData;
+
     constructor(socket_url: string) {
         const socket_url_parsed = new URL(socket_url);
         this.socket_client      = io(socket_url_parsed.origin, {path: socket_url_parsed.pathname});
         this.socket_engine      = this.socket_client.io.engine;
+        this.room_data          = {
+            score_red:      0,
+            score_blue:     0,
+            round_status:   RoomStatus.INTERMISSION,
+            round_lifespan: 0,
+            round_birthday: Date.now()
+        };
         // engine events
         player_client.connection_transport = this.socket_engine.transport.name;
         this.socket_engine.once("upgrade", () => player_client.connection_transport = this.socket_engine.transport.name);
@@ -46,7 +56,6 @@ export default class SocketManager {
                 const leaderboard_player = player_manager.player_get(loop_leaderboard.player_id);
                 leaderboard_player?.data_set(loop_leaderboard);
             });
-            console.log(player_data);
         });
         this.socket_client.on("player_shield", (player_id: string, player_shield: PlayerShield) => {
             const player_object             = player_manager.player_get(player_id);
@@ -56,6 +65,9 @@ export default class SocketManager {
                 shield_lifespan:  player_shield.shield_lifespan - (Date.now() - player_shield.shield_timestamp)
             } as PlayerShield;
             player_object?.shield_set(player_shield_transformed);
+        });
+        this.socket_client.on("room_data", (room_data: RoomData) => {
+            this.room_data = room_data;
         });
         this.socket_client.on("server_ping", () => {
             this.socket_client.emit("client_pong", Date.now());
@@ -80,6 +92,17 @@ export default class SocketManager {
 
     public engine_get(): Engine {
         return this.socket_engine;
+    }
+
+    public scoreboard_get(): RoomScoreboard {
+        const round_age      = (Date.now() - this.room_data.round_birthday);
+        const round_lifetime = (this.room_data.round_lifespan - round_age);
+        return {
+            score_red:      this.room_data.score_red,
+            score_blue:     this.room_data.score_blue,
+            round_status:   this.room_data.round_status,
+            round_lifetime: round_lifetime
+        } as RoomScoreboard;
     }
 
 }
