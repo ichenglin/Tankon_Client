@@ -18,12 +18,14 @@ import Leaderboard from "@/components/leaderboard";
 import Lobby from "@/components/lobby";
 
 import map_default from "@/data/map_default.json";
+import Vector2D from "@/objects/vector_2d";
 
 const font_sono = Sono({subsets: ["latin"]});
 
 export const player_client      = {
 	connection_transport: "Unknown",
-	player_room:          "Offline"
+	player_room:          "Offline",
+	ballistic_tracker:    false
 };
 
 export const socket_manager     = new SocketManager(process.env.server_url as string);
@@ -92,23 +94,26 @@ const Home: NextPageLayout = () => {
 		context_manager.canvas_point(new Point2D(-40, -40), 10);
 
 		collision_manager.hitbox_render();
-		/*let reflection_origin  = player_manager.turret_get_coordinates();
-		let reflection_maximum = 10;
-		while (reflection_maximum-- >= 0) {
-			const reflection_collision   = collision_manager.collision_get(reflection_origin);
-			canvas_context.setLineDash([15, 10]);
-			if (reflection_collision === null) {
-				context_manager.canvas_line(reflection_origin, reflection_origin.vector_duplicate().vector_set(null, null, null, 500).vector_get_destination());
+		// ballistic tracker
+		if (player_client.ballistic_tracker) {
+			let reflection_origin  = player_manager.controller_get().turret_get_coordinates();
+			let reflection_maximum = 3;
+			while (reflection_maximum-- >= 0) {
+				const reflection_collision   = collision_manager.collision_get(reflection_origin);
+				canvas_context.strokeStyle = "gray";
+				canvas_context.setLineDash([10, 15]);
+				if (reflection_collision === null) {
+					context_manager.canvas_line(reflection_origin, reflection_origin.vector_duplicate().vector_set(null, null, null, 500).vector_get_destination());
+					canvas_context.strokeStyle = "black";
+					canvas_context.setLineDash([]);
+					break;
+				}
+				context_manager.canvas_line(reflection_origin, reflection_collision.collision_coordinates);
+				canvas_context.strokeStyle = "black";
 				canvas_context.setLineDash([]);
-				break;
+				reflection_origin = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_reflect, 1E-10).vector_get_destination();
 			}
-			context_manager.canvas_line(reflection_origin, reflection_collision.collision_coordinates);
-			canvas_context.setLineDash([]);
-			//const collision_normal = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_normal, 100).vector_get_destination();
-			//context_manager.canvas_point(collision_normal, 10);
-			//context_manager.canvas_line(reflection_collision.collision_coordinates, collision_normal);
-			reflection_origin = Vector2D.from_point(reflection_collision.collision_coordinates, reflection_collision.collision_reflect, 1E-10).vector_get_destination();
-		}*/
+		}
 		// gui (written separately to ignore scaling)
 		canvas_context.font  = `20px ${font_sono.style.fontFamily}`;
 		canvas_context.fillText(`FPS: ${Math.floor(1000 / rerender_interval)}   Server: ${player_client.player_room}   Players: ${player_manager.player_all().length + 1}/10   Coordinates: (${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_x())}, ${Math.floor(player_manager.controller_get().chassis_get_coordinates().point_get_y())})   Projectiles: ${projectile_manager.projectile_get().length}`, 10, 25);
