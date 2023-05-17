@@ -17,6 +17,8 @@ import Player from "@/objects/player";
 import Leaderboard from "@/components/leaderboard";
 import Lobby from "@/components/lobby";
 
+import map_default from "@/data/map_default.json";
+
 const font_sono = Sono({subsets: ["latin"]});
 
 export const player_client      = {
@@ -25,7 +27,7 @@ export const player_client      = {
 };
 
 export const socket_manager     = new SocketManager(process.env.server_url as string);
-export const context_manager    = new ContextManager(null, 2000);
+export const context_manager    = new ContextManager(null, 3000);
 export const keypress_manager   = new KeyPressManager();
 export const player_manager     = new PlayerManager();
 export const collision_manager  = new CollisionManager([]);
@@ -55,7 +57,7 @@ const Home: NextPageLayout = () => {
 		const lobby_play = document.getElementById("play") as HTMLButtonElement;
 		lobby_play.addEventListener("click", lobby_connect);
 		(window as any).player_data = player_client;
-		collision_manager.hitbox_set([new CollisionHitbox([
+		/*collision_manager.hitbox_set([new CollisionHitbox([
 			new Point2D(100, 200),
 			new Point2D(-100, 200),
 			new Point2D(-150, 300),
@@ -68,7 +70,8 @@ const Home: NextPageLayout = () => {
 		new CollisionHitbox([
 			new Point2D(-200, 100),
 			new Point2D(-100, -300)
-		])]);
+		])]);*/
+		collision_manager.hitbox_set(map_default.map_hitbox.map(loop_hitbox => new CollisionHitbox(loop_hitbox.hitbox_anchor.map(loop_anchor => new Point2D(loop_anchor.x, loop_anchor.y)))));
 	}, []);
 
 	function canvas_rerender(rerender_timestamp: number) {

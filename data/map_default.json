@@ -1,0 +1,242 @@
+{
+    "map_name": "Default",
+    "map_hitbox": [
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of the map",
+            "hitbox_anchor": [
+                {"x": -2600, "y": 800},
+                {"x": 2600, "y": 800},
+                {"x": 2600, "y": -800},
+                {"x": -2600, "y": -800},
+                {"x": -2600, "y": 800}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of red spawnpoint",
+            "hitbox_anchor": [
+                {"x": -2600, "y": 400},
+                {"x": -2500, "y": 400}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of red spawnpoint",
+            "hitbox_anchor": [
+                {"x": -2300, "y": 400},
+                {"x": -2200, "y": 400},
+                {"x": -2200, "y": 300}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of red spawnpoint",
+            "hitbox_anchor": [
+                {"x": -2200, "y": 100},
+                {"x": -2200, "y": -100}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of red spawnpoint",
+            "hitbox_anchor": [
+                {"x": -2300, "y": -400},
+                {"x": -2200, "y": -400},
+                {"x": -2200, "y": -300}
+            ]
+        },
+        {
+            "hitbox_type": "border",
+            "hitbox_description": "the border of red spawnpoint",
+            "hitbox_anchor": [
+                {"x": -2600, "y": -400},
+                {"x": -2500, "y": -400}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -2200, "y": 500},
+                {"x": -2000, "y": 600}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -2200, "y": -500},
+                {"x": -2000, "y": -600}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -1800, "y": 600},
+                {"x": -1600, "y": 400}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -1800, "y": -600},
+                {"x": -1600, "y": -400}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -2000, "y": 100},
+                {"x": -1900, "y": 300}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -2000, "y": -100},
+                {"x": -1900, "y": -300}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -1400, "y": 200},
+                {"x": -1400, "y": -200}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -1400, "y": 800},
+                {"x": -1400, "y": 700}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -1400, "y": 500},
+                {"x": -1400, "y": 400},
+                {"x": -800, "y": 300},
+                {"x": -800, "y": 100}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -1400, "y": -500},
+                {"x": -1400, "y": -400},
+                {"x": -800, "y": -300},
+                {"x": -800, "y": -100}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": -1400, "y": -800},
+                {"x": -1400, "y": -700}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 2200, "y": 500},
+                {"x": 2000, "y": 600}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 2200, "y": -500},
+                {"x": 2000, "y": -600}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 1800, "y": 600},
+                {"x": 1600, "y": 400}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 1800, "y": -600},
+                {"x": 1600, "y": -400}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 2000, "y": 100},
+                {"x": 1900, "y": 300}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 2000, "y": -100},
+                {"x": 1900, "y": -300}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 1400, "y": 200},
+                {"x": 1400, "y": -200}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 1400, "y": 800},
+                {"x": 1400, "y": 700}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 1400, "y": 500},
+                {"x": 1400, "y": 400},
+                {"x": 800, "y": 300},
+                {"x": 800, "y": 100}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 1400, "y": -500},
+                {"x": 1400, "y": -400},
+                {"x": 800, "y": -300},
+                {"x": 800, "y": -100}
+            ]
+        },
+        {
+            "hitbox_type": "wall",
+            "hitbox_description": "the wall",
+            "hitbox_anchor": [
+                {"x": 1400, "y": -800},
+                {"x": 1400, "y": -700}
+            ]
+        }
+    ]
+}
