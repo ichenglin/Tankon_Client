@@ -10,7 +10,6 @@ const next_configuration = {
 	env: {
 		server_url: (next_production) ? "https://backend.runtimecloud.com/tankon" : "http://localhost:3001"
 	},
-	productionBrowserSourceMaps: true,
 	poweredByHeader: false
 };
 

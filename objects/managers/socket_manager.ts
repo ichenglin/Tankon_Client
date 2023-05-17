@@ -44,7 +44,7 @@ export default class SocketManager {
         this.socket_client.on("player_data", (player_data: PlayerData[]) => {
             player_data.forEach(loop_leaderboard => {
                 const leaderboard_player = player_manager.player_get(loop_leaderboard.player_id);
-                leaderboard_player?.latency_set(loop_leaderboard.player_latency);
+                leaderboard_player?.data_set(loop_leaderboard);
             });
             console.log(player_data);
         });
