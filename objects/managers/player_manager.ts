@@ -20,9 +20,8 @@ export default class PlayerManager {
             player_id:       "",
             player_username: "Unknown",
             player_team:     PlayerTeam.TEAM_LOBBY,
-            player_kills:    0,
-            player_deaths:   0,
-            player_latency:  {client_send: 0, client_receive: 0}
+            player_match:    {player_kills: 0, player_deaths:  0},
+            player_latency:  {client_send:  0, client_receive: 0}
         });
     }
 

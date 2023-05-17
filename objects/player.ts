@@ -100,9 +100,13 @@ export interface PlayerData {
     player_id:       string,
     player_username: string,
     player_team:     PlayerTeam,
-    player_kills:    number,
-    player_deaths:   number,
+    player_match:    PlayerMatch,
     player_latency:  PlayerLatency
+}
+
+export interface PlayerMatch {
+    player_kills:  number,
+    player_deaths: number
 }
 
 export interface PlayerTank {

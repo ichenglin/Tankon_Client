@@ -18,8 +18,8 @@ const Leaderboard: NextPageLayout<{leaderboard: Player[]}> = (props) => {
 					const player_data = player_object.data_get();
 					return <tr key={player_index}>
 						<td data-team={player_data.player_team}>{player_data.player_username}</td>
-						<td>0</td>
-						<td>0</td>
+						<td>{player_data.player_match.player_kills}</td>
+						<td>{player_data.player_match.player_deaths}</td>
 						<td>{`${player_data.player_latency.client_send + player_data.player_latency.client_receive}ms`}</td>
 					</tr>;
 				})}
