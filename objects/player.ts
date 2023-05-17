@@ -91,8 +91,10 @@ export default class Player {
     public render_shield(): void {
         const shield_age = Date.now() - this.player_shield.shield_timestamp;
         if (shield_age > this.player_shield.shield_lifespan) return;
-        const shield_size = 0.2 + Math.pow(shield_age / this.player_shield.shield_lifespan, 0.4) * 0.1;
-        context_manager.canvas_image(`/asset/shield.png`, this.chassis_get_coordinates(), shield_size);
+        const shield_progress = shield_age / this.player_shield.shield_lifespan;
+        const shield_size     = 0.2 + Math.pow(shield_progress, 0.4) * 0.1;
+        const shield_rotation = (2*Math.PI) * (-0.01 * Math.pow(shield_progress, -1.5) + 1);
+        context_manager.canvas_image(`/asset/shield.png`, this.chassis_get_coordinates().vector_duplicate().vector_offset(0, 0, shield_rotation, 0), shield_size);
     }
 }
 

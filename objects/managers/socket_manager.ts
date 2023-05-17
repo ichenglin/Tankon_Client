@@ -49,8 +49,13 @@ export default class SocketManager {
             console.log(player_data);
         });
         this.socket_client.on("player_shield", (player_id: string, player_shield: PlayerShield) => {
-            const player_object = player_manager.player_get(player_id);
-            player_object?.shield_set(player_shield);
+            const player_object             = player_manager.player_get(player_id);
+            // transform shield so its animation is smooth
+            const player_shield_transformed = {
+                shield_timestamp: Date.now(),
+                shield_lifespan:  player_shield.shield_lifespan - (Date.now() - player_shield.shield_timestamp)
+            } as PlayerShield;
+            player_object?.shield_set(player_shield_transformed);
         });
         this.socket_client.on("server_ping", () => {
             this.socket_client.emit("client_pong", Date.now());
