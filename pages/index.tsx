@@ -157,12 +157,16 @@ const Home: NextPageLayout = () => {
 
 	// check for unintended element render
 	console.log("Element Rerender");
+	const round_intermission = (scoreboard.round_status === RoomStatus.INTERMISSION);
 
 	return (
 		<section className={styles.body}>
 			<canvas id="canvas" className={styles.canvas}/>
-			<Leaderboard leaderboard={leaderboard}/>
-			<Scoreboard  scoreboard={scoreboard}/>
+			<div className={styles.intermission} data-intermission={round_intermission}>
+				<h1>Round Ended!</h1>
+				<Scoreboard  scoreboard={scoreboard}   round_intermission={round_intermission}/>
+				<Leaderboard leaderboard={leaderboard} round_intermission={round_intermission}/>
+			</div>
 			<Lobby/>
 		</section>
 	);

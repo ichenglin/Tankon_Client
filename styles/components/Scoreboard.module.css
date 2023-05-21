@@ -8,6 +8,14 @@
     justify-content: center;
 }
 
+.scoreboard[data-intermission="true"] {
+    margin-top: 20px;
+    margin-bottom: 50px;
+    width: auto;
+    position: relative;
+    top: 0px;
+}
+
 .round {
     display: flex;
     flex-direction: row;

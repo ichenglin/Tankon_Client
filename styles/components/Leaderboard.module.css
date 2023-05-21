@@ -4,6 +4,10 @@
     right: 0px;
 }
 
+.leaderboard[data-intermission="true"] {
+    position: relative;
+}
+
 .leaderboard > caption {
     padding: 0px 10px;
     margin: 2px;

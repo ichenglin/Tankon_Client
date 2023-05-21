@@ -1,11 +1,12 @@
 import type { NextPageLayout } from "../pages/_app";
 import styles from "@/styles/components/Leaderboard.module.css";
 import Player from "@/objects/player";
+import { RoomStatus } from "./scoreboard";
 
-const Leaderboard: NextPageLayout<{leaderboard: Player[]}> = (props) => {
+const Leaderboard: NextPageLayout<{leaderboard: Player[], round_intermission: boolean}> = (props) => {
 
 	return (
-		<table className={styles.leaderboard}>
+		<table className={styles.leaderboard} data-intermission={props.round_intermission}>
 			<caption>Leaderboard</caption>
 			<tbody>
 				<tr>

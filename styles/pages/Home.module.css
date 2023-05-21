@@ -6,3 +6,24 @@
 .canvas {
     display: block;
 }
+
+.intermission {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.intermission > h1 {
+    margin: 0px;
+    visibility: hidden;
+}
+
+.intermission[data-intermission="true"] > h1 {
+    visibility: visible;
+}

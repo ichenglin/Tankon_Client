@@ -2,14 +2,14 @@ import type { NextPageLayout } from "../pages/_app";
 import styles from "@/styles/components/Scoreboard.module.css";
 import { number_fixed } from "@/utilities/number_fixed";
 
-const Scoreboard: NextPageLayout<{scoreboard: RoomScoreboard}> = (props) => {
+const Scoreboard: NextPageLayout<{scoreboard: RoomScoreboard, round_intermission: boolean}> = (props) => {
 
     const lifetime_legal    = Math.max(props.scoreboard.round_lifetime, 0);
     const lifetime_minutes  = Math.floor(lifetime_legal / 60E3);
     const lifetime_seconds  = Math.floor((lifetime_legal % 60E3) / 1E3);
 
 	return (
-		<div className={styles.scoreboard}>
+		<div className={styles.scoreboard} data-intermission={props.round_intermission}>
             <div className={styles.round}>
                 <div className={`${styles.score} ${styles.score_red}`}>
                     <p>{props.scoreboard.score_red}</p>
@@ -51,4 +51,4 @@ export enum RoomStatus {
 export const RoomStatusName = [
     "Intermission",
     "Team Deathmatch"
-]
+];
