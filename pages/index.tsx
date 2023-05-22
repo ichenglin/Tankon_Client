@@ -43,7 +43,8 @@ const Home: NextPageLayout = () => {
 	let rerender_previous: number | null = null;
 
 	const [leaderboard, set_leaderboard] = useState([] as Player[]);
-	const [scoreboard, set_scoreboard] = useState({score_red: 0, score_blue: 0, round_status: RoomStatus.INTERMISSION, round_lifetime: 0} as RoomScoreboard);
+	const [scoreboard,  set_scoreboard ] = useState({score_red: 0, score_blue: 0, round_status: RoomStatus.INTERMISSION, round_lifetime: 0} as RoomScoreboard);
+	const [killscreen,    set_killscreen   ] = useState(null as Player | null);
 
 	useEffect(() => {
 		// assign canvas context to manager
@@ -68,6 +69,7 @@ const Home: NextPageLayout = () => {
 		setInterval(() => {
 			set_leaderboard([player_manager.controller_get(), ...player_manager.player_all()]);
 			set_scoreboard(socket_manager.scoreboard_get());
+			set_killscreen(player_manager.controller_spectate());
 		}, 100);
 	}, []);
 
@@ -77,9 +79,9 @@ const Home: NextPageLayout = () => {
 		const rerender_interval = rerender_timestamp - rerender_previous;
 		rerender_previous = rerender_timestamp;
 		// render
-		const canvas_element = document.getElementById("canvas") as HTMLCanvasElement;
-		const canvas_context = canvas_element.getContext("2d") as CanvasRenderingContext2D;
-		context_manager.canvas_focus(player_manager.controller_get().chassis_get_coordinates());
+		const canvas_element    = document.getElementById("canvas") as HTMLCanvasElement;
+		const canvas_context    = canvas_element.getContext("2d") as CanvasRenderingContext2D;
+		context_manager.canvas_focus(player_manager.controller_focus());
 		context_manager.canvas_clear();
 		// some points for reference
 		context_manager.canvas_point(new Point2D(0, 0), 10);
@@ -157,16 +159,22 @@ const Home: NextPageLayout = () => {
 
 	// check for unintended element render
 	console.log("Element Rerender");
+
 	const round_intermission = (scoreboard.round_status === RoomStatus.INTERMISSION);
 
 	return (
 		<section className={styles.body}>
 			<canvas id="canvas" className={styles.canvas}/>
-			<div className={styles.intermission} data-intermission={round_intermission}>
-				<div className={styles.report}>
-					<h1>Round Ended!</h1>
-					<Scoreboard  scoreboard={scoreboard}   round_intermission={round_intermission}/>
-					<Leaderboard leaderboard={leaderboard} round_intermission={round_intermission}/>
+			<div>
+				<div className={styles.intermission} data-intermission={round_intermission}>
+					<div className={styles.report}>
+						<h1>Round Ended!</h1>
+						<Scoreboard  scoreboard={scoreboard}   round_intermission={round_intermission}/>
+						<Leaderboard leaderboard={leaderboard} round_intermission={round_intermission}/>
+					</div>
+				</div>
+				<div className={styles.killscreen} data-killscreen={killscreen !== null}>
+					<h1>{`You were killed by ${killscreen?.data_get().player_username}`}</h1>
 				</div>
 			</div>
 			<Lobby/>

@@ -6,6 +6,7 @@ export default class Player {
     private player_data:        PlayerData;
     private player_tank:        PlayerTank;
     private player_shield:      PlayerShield;
+    private player_spectate:    PlayerSpectate | null;
     private player_movement:    PlayerMovement;
     private turret_direction:   number;
 
@@ -19,6 +20,7 @@ export default class Player {
             shield_timestamp: Date.now(),
             shield_lifespan:  0
         };
+        this.player_spectate = null;
         this.player_movement = {
             movement_origin:    new Vector2D(0, 0, 0, 0),
             movement_proceed:   false,
@@ -72,6 +74,20 @@ export default class Player {
     public shield_alive(): boolean {
         const shield_age = Date.now() - this.player_shield.shield_timestamp;
         return (shield_age < this.player_shield.shield_lifespan);
+    }
+
+    public spectate_set(player_spectate: PlayerSpectate | null): void {
+        this.player_spectate = player_spectate;
+    }
+
+    public spectate_get(): PlayerSpectate | null {
+        return this.player_spectate;
+    }
+
+    public spectate_alive(): boolean {
+        if (this.player_spectate === null) return false;
+        const spectate_age = Date.now() - this.player_spectate.spectate_timestamp;
+        return (spectate_age < this.player_spectate.spectate_lifespan);
     }
 
     public movement_get(): PlayerMovement {
@@ -137,4 +153,10 @@ export enum PlayerTeam {
 export interface PlayerShield {
     shield_timestamp: number,
     shield_lifespan:  number
+}
+
+export interface PlayerSpectate {
+    spectate_target:    Player,
+    spectate_timestamp: number,
+    spectate_lifespan:  number
 }

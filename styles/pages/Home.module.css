@@ -16,10 +16,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    visibility: hidden;
 }
 
+
 .intermission[data-intermission="true"] {
-    background-color: rgba(0, 0, 0, 0.4);
+    visibility: visible;
 }
 
 .intermission > .report {
@@ -29,17 +32,32 @@
     justify-content: center;
     align-items: center;
     border-radius: 10px;
-}
-
-.intermission[data-intermission="true"] > .report {
     background-color: rgba(255, 255, 255, 0.4);
 }
 
 .intermission > .report > h1 {
     margin: 0px;
+}
+
+.killscreen {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0px 0px min(25vw, 25vh) min(10vw, 10vh) rgba(255, 0, 0, 0.6);
     visibility: hidden;
 }
 
-.intermission[data-intermission="true"] > .report > h1 {
+.killscreen[data-killscreen="true"] {
     visibility: visible;
+}
+
+.killscreen > h1 {
+    margin: 0px;
+    color: #FF0000;
+    transform: translateY(100px);
 }

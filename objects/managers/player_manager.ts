@@ -1,9 +1,10 @@
 import { collision_manager, context_manager, keypress_manager, projectile_manager, socket_manager } from "@/pages";
-import Player, { PlayerMovement, PlayerData, PlayerTeam } from "../player";
+import Player, { PlayerMovement, PlayerData, PlayerTeam, PlayerSpectate } from "../player";
 import Vector2D from "../vector_2d";
 
 import { Sono } from "next/font/google";
 import { RoomStatus } from "@/components/scoreboard";
+import Point2D from "../point_2d";
 
 const font_sono = Sono({subsets: ["latin"]});
 
@@ -89,6 +90,16 @@ export default class PlayerManager {
 
     public controller_get(): Player {
         return this.controller_player;
+    }
+
+    public controller_focus(): Point2D {
+        const focus_target = (this.controller_player.spectate_alive() ? this.controller_player.spectate_get()?.spectate_target as Player : this.controller_player);
+        return focus_target.chassis_get_coordinates();
+    }
+
+    public controller_spectate(): Player | null {
+        if (!this.controller_player.spectate_alive()) return null;
+        return this.controller_player.spectate_get()?.spectate_target as Player;
     }
 
     public player_add(player_data: PlayerData): void {

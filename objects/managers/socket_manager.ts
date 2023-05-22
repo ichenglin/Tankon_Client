@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { Socket as Engine } from "engine.io-client";
 import { player_client, player_manager, projectile_manager } from "@/pages";
-import { PlayerMovement, PlayerData, PlayerShield } from "../player";
+import { PlayerMovement, PlayerData, PlayerShield, PlayerSpectate } from "../player";
 import Vector2D from "../vector_2d";
 import { RoomData, RoomScoreboard, RoomStatus } from "@/components/scoreboard";
 
@@ -56,6 +56,20 @@ export default class SocketManager {
                 const leaderboard_player = player_manager.player_get(loop_leaderboard.player_id);
                 leaderboard_player?.data_set(loop_leaderboard);
             });
+        });
+        this.socket_client.on("player_kill", (killer_id: string, victim_ids: string[]) => {
+            // check if controller is killed
+            const controller_id = player_manager.controller_get().data_get().player_id;
+            if (!victim_ids.includes(controller_id)) return;
+            // check if attacker exist
+            const killer_player = player_manager.player_get(killer_id);
+            if (killer_player === undefined) return;
+            // apply spectate
+            player_manager.controller_get().spectate_set({
+                spectate_target:    killer_player,
+                spectate_timestamp: Date.now(),
+                spectate_lifespan:  (5 * (1E3))
+            } as PlayerSpectate);
         });
         this.socket_client.on("player_shield", (player_id: string, player_shield: PlayerShield) => {
             const player_object             = player_manager.player_get(player_id);
