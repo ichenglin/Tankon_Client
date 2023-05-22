@@ -173,7 +173,7 @@ const Home: NextPageLayout = () => {
 						<Leaderboard leaderboard={leaderboard} round_intermission={round_intermission}/>
 					</div>
 				</div>
-				<div className={styles.killscreen} data-killscreen={killscreen !== null}>
+				<div className={styles.killscreen} data-killscreen={!round_intermission && killscreen !== null}>
 					<h1>{`You were killed by ${killscreen?.data_get().player_username}`}</h1>
 				</div>
 			</div>
