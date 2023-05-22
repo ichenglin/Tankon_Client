@@ -3,6 +3,7 @@ import Player, { PlayerMovement, PlayerData, PlayerTeam } from "../player";
 import Vector2D from "../vector_2d";
 
 import { Sono } from "next/font/google";
+import { RoomStatus } from "@/components/scoreboard";
 
 const font_sono = Sono({subsets: ["latin"]});
 
@@ -32,6 +33,7 @@ export default class PlayerManager {
         // set new interval if enabled
         if (turret_firemode !== true) return;
         this.turret_firing = window.setInterval(() => {
+            if (socket_manager.scoreboard_get().round_status === RoomStatus.INTERMISSION) return;
             const turret_coordinates = this.controller_player.turret_get_coordinates();
             projectile_manager.projectile_add(turret_coordinates, 1000, 3);
         }, (this.controller_player.tank_get().turret_firerate*1000));
