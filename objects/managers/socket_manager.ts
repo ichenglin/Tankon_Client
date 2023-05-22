@@ -82,8 +82,8 @@ export default class SocketManager {
 		});
     }
 
-    public client_kill(victim_ids: string[]): void {
-        this.socket_client.emit("player_kill", victim_ids);
+    public client_hit(victim_ids: string[]): void {
+        this.socket_client.emit("player_hit", victim_ids);
     }
 
     public client_get(): Socket {

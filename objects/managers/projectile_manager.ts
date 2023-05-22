@@ -43,7 +43,7 @@ export default class ProjectileManager {
                 controller_victims.push(loop_player);
             });
         }
-        if (controller_victims.length > 0) socket_manager.client_kill(controller_victims.map(loop_victim => loop_victim.data_get().player_id));
+        if (controller_victims.length > 0) socket_manager.client_hit(controller_victims.map(loop_victim => loop_victim.data_get().player_id));
     }
 
     public projectile_render(): void {
