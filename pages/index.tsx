@@ -163,9 +163,11 @@ const Home: NextPageLayout = () => {
 		<section className={styles.body}>
 			<canvas id="canvas" className={styles.canvas}/>
 			<div className={styles.intermission} data-intermission={round_intermission}>
-				<h1>Round Ended!</h1>
-				<Scoreboard  scoreboard={scoreboard}   round_intermission={round_intermission}/>
-				<Leaderboard leaderboard={leaderboard} round_intermission={round_intermission}/>
+				<div className={styles.report}>
+					<h1>Round Ended!</h1>
+					<Scoreboard  scoreboard={scoreboard}   round_intermission={round_intermission}/>
+					<Leaderboard leaderboard={leaderboard} round_intermission={round_intermission}/>
+				</div>
 			</div>
 			<Lobby/>
 		</section>
