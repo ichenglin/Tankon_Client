@@ -185,7 +185,7 @@ const Home: NextPageLayout = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	return {props: {
 		page_name:        "Tankon",
-		page_description: "Tankon multiplayer tank game."
+		page_description: "Tankon is an online multiplayer tank minigame with round-based gameplay, featuring team deathmatch gamemode and scalable game servers."
 	}};
 }
 
