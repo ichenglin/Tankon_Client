@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppPropsLayout) {
 			<title>{`${page_fallback.page_name} • Icheng Lin`}</title>
 
 			<meta property="og:title"       content={`${page_fallback.page_name } • Icheng Lin`} />
-			<meta property="og:image"       content="https://ichenglin.net/android-chrome-192x192.png"/>
+			<meta property="og:image"       content="https://ichenglin.com/android-chrome-192x192.png"/>
 			<meta property="og:description" content={page_fallback.page_description} />
 			<meta name="description"        content={page_fallback.page_description} />
 			<meta name="theme-color"        content="#007ACC" />
@@ -47,7 +47,7 @@ export default function App({ Component, pageProps }: AppPropsLayout) {
 			<link rel="icon"             href="/favicon.ico"   crossOrigin="use-credentials"/>
 			<link rel="apple-touch-icon" href="/logo192.png"   crossOrigin="use-credentials"/>
 			<link rel="manifest"         href="/manifest.json" crossOrigin="use-credentials"/>
-			<link rel="canonical"        href="https://tankon.ichenglin.net"/>
+			<link rel="canonical"        href="https://tankon.ichenglin.com"/>
 		</Head>
 		<main className={font_inter.className}>
 			{page_layout(<Component {...pageProps} />)}

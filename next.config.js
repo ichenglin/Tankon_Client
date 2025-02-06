@@ -8,7 +8,7 @@ const next_configuration = {
 		removeConsole: {exclude: ["error"]}
 	},
 	env: {
-		server_url: (next_production) ? "https://backend.ichenglin.net/tankon" : "http://localhost:3001"
+		server_url: (next_production) ? "https://backend.ichenglin.com/tankon" : "http://localhost:3001"
 	},
 	poweredByHeader: false
 };
